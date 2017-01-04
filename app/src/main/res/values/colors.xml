@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#629f1d</color>
+    <color name="colorPrimaryDark">#446f14</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorButtonBrandFillDisabled">@color/colorFillDisabled</color>
+    <color name="colorFillDisabled">#d6d6db</color>
+    <color name="colorButtonBrandFillFocused">@color/colorBrandPrimaryAccent</color>
+    <color name="colorBrandPrimaryAccent">#FF629F1D</color>
+    <color name="colorButtonBrandFillPressed">@color/colorBrandPrimaryAccent</color>
+    <color name="colorButtonBrandFill">@color/colorBrandPrimary</color>
+    <color name="colorBrandPrimary">#FF629F1D</color>
+    <color name="colorPrimaryTextDark">#323232</color>
+</resources>
