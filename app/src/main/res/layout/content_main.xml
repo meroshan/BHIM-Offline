@@ -15,28 +15,34 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="login"
+            android:visibility="gone" />
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:visibility="visible" />
+
+            <include layout="@layout/balance_card" />
+
+            <include layout="@layout/laterst_transactions_card" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:visibility="visible" />
-
-                <include layout="@layout/balance_card" />
-
-                <include layout="@layout/laterst_transactions_card" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/large_text"
-                    android:visibility="visible" />
-            </LinearLayout>
+                android:layout_margin="16dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/large_text"
+                android:visibility="visible" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

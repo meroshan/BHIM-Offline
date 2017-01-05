@@ -2,6 +2,7 @@ package com.bhimoffline.truedev.bhimoffline.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,12 +22,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.bhimoffline.truedev.bhimoffline.R;
+import com.bhimoffline.truedev.bhimoffline.login.LoginActivity1;
+
+import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static MainActivity instance;
-    Button update_balance;
-    Button other_services;
+    Button update_balance, other_services, login;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     public static MainActivity getInstance() {
         return instance;
@@ -36,6 +41,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences(myPref, 0);
+//        editor = sharedPreferences.edit();
+        if (sharedPreferences.getBoolean("isLoggerIn", false)) {
+//            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+        } else {
+            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+            finish();
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -60,10 +75,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         instance = this;
         update_balance = (Button) findViewById(R.id.update_balance);
         other_services = (Button) findViewById(R.id.other_services);
+        login = (Button) findViewById(R.id.login);
 
         update_balance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                sharedPreferences.edit().clear().commit();
                 //Toast.makeText(MainActivity.this, "Fetching main balance", Toast.LENGTH_SHORT).show();
                 Intent fetchBalanceIntent = new Intent(Intent.ACTION_CALL);
 //                fetchBalanceIntent.setAction(Intent.ACTION_CALL);
@@ -79,6 +96,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Opening other services", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, LoginActivity1.class));
             }
         });
     }
