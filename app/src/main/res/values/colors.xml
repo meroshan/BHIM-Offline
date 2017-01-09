@@ -11,4 +11,5 @@
     <color name="colorButtonBrandFill">@color/colorBrandPrimary</color>
     <color name="colorBrandPrimary">#FF629F1D</color>
     <color name="colorPrimaryTextDark">#323232</color>
+    <color name="horizonal_line_background">#22000000</color>
 </resources>

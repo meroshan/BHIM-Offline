@@ -1,5 +1,6 @@
 package com.bhimoffline.truedev.bhimoffline.service;
 
+import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -16,7 +17,7 @@ import static android.content.ContentValues.TAG;
  * Created by rahul on 1/2/2017.
  */
 
-public class USSDAccessibilityService extends android.accessibilityservice.AccessibilityService {
+public class USSDAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Log.d(TAG, "onAccessibilityEvent");

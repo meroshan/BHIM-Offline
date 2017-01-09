@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
@@ -64,8 +65,16 @@ public class LoginActivity1 extends AppCompatActivity {
         editor = sharedPreferences.edit();
         editor.putString("phone_no", phone_no);
         editor.putString("bank_name", bank_name);
-        editor.putBoolean("isLoggerIn", true);
+        editor.putBoolean("isLoggedIn", true);
         return editor.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Toast.makeText(this, "onBackPressed", Toast.LENGTH_SHORT).show();
+        //MainActivity.getInstance().finish();
+        moveTaskToBack(true);
     }
 }
 

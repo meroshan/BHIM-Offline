@@ -1,28 +1,38 @@
 package com.bhimoffline.truedev.bhimoffline.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.login.LoginActivity1;
+import com.bhimoffline.truedev.bhimoffline.service.AccessibilityNotEnabled;
+import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
 
 import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
 
@@ -31,10 +41,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static MainActivity instance;
     Button update_balance, other_services, login;
     SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    TextView user_detail_card_bank_name;
+    TextView user_detail_card_upi_address;
+    TextView user_detail_card_balance;
+    TextView balance_card_balance;
+    TextView balance_card_last_updated;
+    ImageView bank_logo;
+    String TAG = "tag";
 
     public static MainActivity getInstance() {
         return instance;
+    }
+
+    protected void onResume() {
+        super.onResume();
+        sharedPreferences = getSharedPreferences(myPref, 0);
+        Toast.makeText(MainActivity.this, "onResume" + sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
+
+        if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
+            //Toast.makeText(MainActivity.this, sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
+            if (!isAccessibilitySettingsOn(getApplicationContext())) {
+                startActivity(new Intent(MainActivity.this, AccessibilityNotEnabled.class));
+            } else {
+                return;
+            }
+        } else {
+            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+        }
     }
 
     @Override
@@ -43,16 +76,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences(myPref, 0);
-//        editor = sharedPreferences.edit();
-        if (sharedPreferences.getBoolean("isLoggerIn", false)) {
-//            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+            if (!isAccessibilitySettingsOn(getApplicationContext())) {
+                Toast.makeText(MainActivity.this, "fffffffffffffff", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, AccessibilityNotEnabled.class));
+            }
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity1.class));
-            finish();
+            //finish();
         }
+
+        Toast.makeText(this, "aaaaaaaaaaaaaaaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+
+        user_detail_card_bank_name = (TextView) findViewById(R.id.user_detail_card_bank_name);
+        user_detail_card_upi_address = (TextView) findViewById(R.id.user_detail_card_upi_address);
+        user_detail_card_balance = (TextView) findViewById(R.id.user_detail_card_balance);
+        balance_card_balance = (TextView) findViewById(R.id.balance_card_balance);
+        balance_card_last_updated = (TextView) findViewById(R.id.balance_card_last_updated);
+        bank_logo = (ImageView) findViewById(R.id.bank_logo);
+
+        user_detail_card_bank_name.setText(sharedPreferences.getString("bank_name", "your bank name"));
+        user_detail_card_upi_address.setText(sharedPreferences.getString("phone_no", "phone_no") + "@upi");
+        user_detail_card_balance.setText(sharedPreferences.getString("balance", ""));
+        balance_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
+        balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ColorGenerator colorGenerator = ColorGenerator.MATERIAL;
+        int color = colorGenerator.getRandomColor();
+
+        TextDrawable textDrawable = TextDrawable.builder()
+                .buildRound(String.valueOf(user_detail_card_bank_name.getText().charAt(0)), color);
+        bank_logo.setImageDrawable(textDrawable);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,21 +138,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
 //                sharedPreferences.edit().clear().commit();
-                //Toast.makeText(MainActivity.this, "Fetching main balance", Toast.LENGTH_SHORT).show();
-                Intent fetchBalanceIntent = new Intent(Intent.ACTION_CALL);
-//                fetchBalanceIntent.setAction(Intent.ACTION_CALL);
-                fetchBalanceIntent.setData(Uri.parse("tel:" + "*123" + Uri.encode("#")));
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                startActivity(fetchBalanceIntent);
+                makeCall("*123");
             }
         });
 
         other_services.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Opening other services", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "Opening other services", Toast.LENGTH_SHORT).show();
+                makeCall("*99");
             }
         });
 
@@ -105,6 +156,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(MainActivity.this, LoginActivity1.class));
             }
         });
+    }
+
+    private boolean isAccessibilitySettingsOn(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = getPackageName() + "/" + USSDAccessibilityService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.v(TAG, "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e(TAG, "Error finding setting, default accessibility to not found: "
+                    + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
+            String settingValue = Settings.Secure.getString(
+                    mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+
+                    Log.v(TAG, "-------------- > accessibilityService :: " + accessibilityService + " " + service);
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        Log.v(TAG, "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+        } else {
+            Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
+        }
+
+        return false;
+    }
+
+    public void makeCall(String ussdCode) {
+        Intent fetchBalanceIntent = new Intent(Intent.ACTION_CALL);
+        fetchBalanceIntent.setData(Uri.parse("tel:" + ussdCode + Uri.encode("#")));
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        startActivity(fetchBalanceIntent);
     }
 
     @Override

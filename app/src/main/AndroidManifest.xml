@@ -21,15 +21,26 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".login.LoginActivity1"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
+        <activity
+            android:name=".service.AccessibilityNotEnabled"
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
+
         <service
             android:name=".service.USSDAccessibilityService"
+            android:label="@string/accessibilty_label"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
+            <intent-filter android:priority="1000">
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
 
@@ -44,9 +55,7 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".login.LoginActivity1"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"></activity>
+
     </application>
 
 </manifest>
