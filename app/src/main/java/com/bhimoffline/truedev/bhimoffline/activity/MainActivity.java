@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,11 +35,16 @@ import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.login.LoginActivity1;
 import com.bhimoffline.truedev.bhimoffline.service.AccessibilityNotEnabled;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static boolean activityVisible;
     private static MainActivity instance;
     Button update_balance, other_services, login;
     SharedPreferences sharedPreferences;
@@ -48,20 +55,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView balance_card_last_updated;
     ImageView bank_logo;
     String TAG = "tag";
+    private FirebaseAnalytics mFirebaseAnalytics;
+    //int PERMISSION_ALL = 1;
+    //String[] PERMISSIONS = {Manifest.permission.CALL_PHONE};
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public static MainActivity getInstance() {
         return instance;
     }
 
+    public static boolean isActivityVisible() {
+        return activityVisible;
+    }
+
+    public static void activityResumed() {
+        activityVisible = true;
+    }
+
+    public static void activityPaused() {
+        //activityVisible = false;
+    }
+
+    public static void activityStopped() {
+        activityVisible = false;
+    }
+
     protected void onResume() {
         super.onResume();
+        MainActivity.activityResumed();
+
         sharedPreferences = getSharedPreferences(myPref, 0);
-        Toast.makeText(MainActivity.this, "onResume" + sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
 
         if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
             //Toast.makeText(MainActivity.this, sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
             if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                startActivity(new Intent(MainActivity.this, AccessibilityNotEnabled.class));
+                startActivity(new Intent(this, AccessibilityNotEnabled.class));
             } else {
                 return;
             }
@@ -71,22 +110,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        //MainActivity.activityPaused();
+        Toast.makeText(instance, "onPause", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MainActivity.activityStopped();
+        Toast.makeText(instance, "onStop", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(instance, "onDestroy", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences(myPref, 0);
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
             if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                Toast.makeText(MainActivity.this, "fffffffffffffff", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainActivity.this, AccessibilityNotEnabled.class));
+                //Toast.makeText(MainActivity.this, "fffffffffffffff", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, AccessibilityNotEnabled.class));
             }
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity1.class));
             //finish();
         }
 
-        Toast.makeText(this, "aaaaaaaaaaaaaaaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+//        if (!hasPermissions(this, PERMISSIONS)) {
+//            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+//        }
+
+        //Toast.makeText(this, "aaaaaaaaaaaaaaaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
 
         user_detail_card_bank_name = (TextView) findViewById(R.id.user_detail_card_bank_name);
         user_detail_card_upi_address = (TextView) findViewById(R.id.user_detail_card_upi_address);
@@ -146,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 //Toast.makeText(MainActivity.this, "Opening other services", Toast.LENGTH_SHORT).show();
-                makeCall("*99");
+                makeCall("*121");
             }
         });
 

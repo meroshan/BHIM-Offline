@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivityVisible;
 
 /**
  * Created by rahul on 1/2/2017.
@@ -45,7 +46,12 @@ public class USSDAccessibilityService extends AccessibilityService {
         String text = processUSSDText(eventText);
         if (TextUtils.isEmpty(text)) return;
 
-        performGlobalAction(GLOBAL_ACTION_BACK); // This works on 4.1+ only
+        if (isActivityVisible()) {
+            //Toast.makeText(this, "fine", Toast.LENGTH_SHORT).show();
+            performGlobalAction(GLOBAL_ACTION_BACK); // This works on 4.1+ only
+        } else {
+            //Toast.makeText(this, "outside app", Toast.LENGTH_SHORT).show();
+        }
 
         Intent intent = new Intent();
         intent.setAction("truedev.bankbalance.USSD");
