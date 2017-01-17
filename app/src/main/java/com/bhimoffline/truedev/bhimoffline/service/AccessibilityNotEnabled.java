@@ -26,7 +26,10 @@ public class AccessibilityNotEnabled extends Activity {
         go_to_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                startActivity(intent);
+                //Toast.makeText(AccessibilityNotEnabled.this, "Destroying activity", Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }

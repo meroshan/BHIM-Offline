@@ -2,6 +2,7 @@ package com.bhimoffline.truedev.bhimoffline.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,7 @@ public class LoginActivity1 extends AppCompatActivity {
     public SharedPreferences.Editor editor;
     TextInputEditText login_phone_no;
     AutoCompleteTextView login_bank_name;
-    Button login_continue;
+    Button login_continue, playstore_bhim, playstore_phonepe;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -35,6 +36,8 @@ public class LoginActivity1 extends AppCompatActivity {
         login_phone_no = (TextInputEditText) findViewById(R.id.login_mobile_no);
         login_bank_name = (AutoCompleteTextView) findViewById(R.id.login_bank_name);
         login_continue = (Button) findViewById(R.id.login_continue);
+        playstore_bhim = (Button) findViewById(R.id.playstore_bhim);
+        playstore_phonepe = (Button) findViewById(R.id.playstore_phonepe);
 
         String bankNames[] = {"Abhyudaya Co-op Bank", "Allahabad Bank", "Andhra Bank", "Apna Sahakari Bank", "Axis Bank", "Bank of Baroda",
                 "Bank of India", "Bank of Maharashtra", "Bhartiya Mahila Bank", "Canara Bank", "Central Bank of India", "Corporation Bank",
@@ -56,6 +59,24 @@ public class LoginActivity1 extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.getInstance(), MainActivity.class));
                     }
                 }
+            }
+        });
+
+        playstore_bhim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent bhimApp = new Intent(Intent.ACTION_VIEW);
+                bhimApp.setData(Uri.parse("https://play.google.com/store/apps/details?id=in.org.npci.upiapp"));
+                startActivity(bhimApp);
+            }
+        });
+
+        playstore_phonepe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent phonepe = new Intent(Intent.ACTION_VIEW);
+                phonepe.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.phonepe.app"));
+                startActivity(phonepe);
             }
         });
     }

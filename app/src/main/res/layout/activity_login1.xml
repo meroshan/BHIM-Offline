@@ -6,7 +6,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,46 +79,60 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"
                 android:background="#22000000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Don't have upi address?" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Register your mobile here" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingTop="8dp">
 
-                <Button
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/colorBrandPrimaryAccent"
-                    android:padding="0dp"
-                    android:text="BHIM"
-                    android:textColor="@android:color/white" />
+                    android:gravity="center"
+                    android:text="Don't have upi address?"
+                    android:textSize="16sp" />
 
-                <Button
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/colorBrandPrimaryAccent"
-                    android:padding="0dp"
-                    android:text="PhonePe"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white" />
+                    android:gravity="center"
+                    android:text="Register your mobile here"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/playstore_bhim"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorBrandPrimaryAccent"
+                        android:padding="0dp"
+                        android:text="BHIM"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/playstore_phonepe"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorBrandPrimaryAccent"
+                        android:padding="0dp"
+                        android:text="PhonePe"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

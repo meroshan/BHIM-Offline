@@ -1,7 +1,9 @@
 package com.bhimoffline.truedev.bhimoffline.activity;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,16 +20,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
@@ -35,6 +38,7 @@ import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.login.LoginActivity1;
 import com.bhimoffline.truedev.bhimoffline.service.AccessibilityNotEnabled;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
+import com.bhimoffline.truedev.bhimoffline.utils.SwipeDismissTouchListener;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -55,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView balance_card_last_updated;
     ImageView bank_logo;
     String TAG = "tag";
+    int PERMISSION_ALL = 1;
+    String[] PERMISSIONS = {Manifest.permission.CALL_PHONE};
     private FirebaseAnalytics mFirebaseAnalytics;
-    //int PERMISSION_ALL = 1;
-    //String[] PERMISSIONS = {Manifest.permission.CALL_PHONE};
 
     public static boolean hasPermissions(Context context, String... permissions) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
@@ -95,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MainActivity.activityResumed();
 
         sharedPreferences = getSharedPreferences(myPref, 0);
-        Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
 
         if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
             //Toast.makeText(MainActivity.this, sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
@@ -113,20 +117,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onPause() {
         super.onPause();
         //MainActivity.activityPaused();
-        Toast.makeText(instance, "onPause", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(instance, "onPause", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         MainActivity.activityStopped();
-        Toast.makeText(instance, "onStop", Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(instance, "onStop", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Toast.makeText(instance, "onDestroy", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(instance, "onDestroy", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -138,11 +142,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_main);
 
+
         sharedPreferences = getSharedPreferences(myPref, 0);
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
             if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                //Toast.makeText(MainActivity.this, "fffffffffffffff", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, AccessibilityNotEnabled.class));
+                startActivity(new Intent(this, AccessibilityNotEnabled.class).setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
             }
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity1.class));
@@ -152,8 +156,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        if (!hasPermissions(this, PERMISSIONS)) {
 //            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
 //        }
-
-        //Toast.makeText(this, "aaaaaaaaaaaaaaaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
 
         user_detail_card_bank_name = (TextView) findViewById(R.id.user_detail_card_bank_name);
         user_detail_card_upi_address = (TextView) findViewById(R.id.user_detail_card_upi_address);
@@ -170,6 +172,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final CardView cardView = (CardView) findViewById(R.id.swipable);
+        cardView.setOnTouchListener(new SwipeDismissTouchListener(cardView, null,
+                new SwipeDismissTouchListener.DismissCallbacks() {
+
+                    @Override
+                    public boolean canDismiss(Object token) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onDismiss(View view, Object token) {
+                        //Toast.makeText(MainActivity.this, "dismissing", Toast.LENGTH_SHORT).show();
+                        ((ViewGroup) cardView.getParent()).removeView(cardView);
+                    }
+                }));
 
         ColorGenerator colorGenerator = ColorGenerator.MATERIAL;
         int color = colorGenerator.getRandomColor();
@@ -205,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
 //                sharedPreferences.edit().clear().commit();
+//                ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
+                askForPermission();
                 makeCall("*123");
             }
         });
@@ -212,8 +232,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         other_services.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(MainActivity.this, "Opening other services", Toast.LENGTH_SHORT).show();
-                makeCall("*121");
+                askForPermission();
+                makeCall("*123");
             }
         });
 
@@ -223,6 +243,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(MainActivity.this, LoginActivity1.class));
             }
         });
+    }
+
+    private void askForPermission() {
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            Boolean temp = ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CALL_PHONE);
+            showMessage();
+            return;
+        }
+    }
+
+    private void showMessage() {
+        AlertDialog.Builder alertDialoge = new AlertDialog.Builder(MainActivity.this);
+        alertDialoge.setTitle("Permission Required")
+                .setCancelable(false)
+                .setMessage("BHIMOfffline doen't work without phone permission\nWe just need to make a call to fetch your balance. So please allow this permission.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
+                    }
+                })
+                .setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        System.exit(0);
+                    }
+                });
+        alertDialoge.show();
     }
 
     private boolean isAccessibilitySettingsOn(Context mContext) {
