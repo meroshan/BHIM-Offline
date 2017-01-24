@@ -40,6 +40,8 @@ import com.bhimoffline.truedev.bhimoffline.service.AccessibilityNotEnabled;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
 import com.bhimoffline.truedev.bhimoffline.utils.SwipeDismissTouchListener;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import io.fabric.sdk.android.Fabric;
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
             //Toast.makeText(MainActivity.this, sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
             if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                startActivity(new Intent(this, AccessibilityNotEnabled.class));
+                startActivity(new Intent(this, AccessibilityNotEnabled.class).setFlags(268435456));
             } else {
                 return;
             }
@@ -136,21 +138,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Answers(), new Crashlytics());
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        Answers.getInstance().logCustom(new CustomEvent("App opened"));
+        //finish();
 
         setContentView(R.layout.activity_main);
-
 
         sharedPreferences = getSharedPreferences(myPref, 0);
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
             if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                startActivity(new Intent(this, AccessibilityNotEnabled.class).setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS));
+                startActivity(new Intent(this, AccessibilityNotEnabled.class).setFlags(268435456));
             }
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity1.class));
-            //finish();
         }
 
 //        if (!hasPermissions(this, PERMISSIONS)) {

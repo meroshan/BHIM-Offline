@@ -69,6 +69,7 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
+            <include layout="@layout/share_app" />
             <!--<include layout="@layout/laterst_transactions_card" />-->
 
             <TextView

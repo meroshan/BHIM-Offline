@@ -1,1 +1,1 @@
-include ':app', 'subProject:FreemiumLibrary'
+include ':app'
