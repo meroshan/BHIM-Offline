@@ -33,6 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:layout_marginRight="8dp"
                 android:gravity="end"
                 android:text="never"
                 android:textColor="@android:color/black"
@@ -86,8 +87,5 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp"></View>
     </LinearLayout>
 </android.support.v7.widget.CardView>

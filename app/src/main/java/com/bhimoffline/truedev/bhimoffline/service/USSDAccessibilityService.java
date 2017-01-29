@@ -53,6 +53,7 @@ public class USSDAccessibilityService extends AccessibilityService {
         }
 
         String text = processUSSDText(eventText);
+
         if (TextUtils.isEmpty(text)) return;
 
         if (isActivityVisible()) {

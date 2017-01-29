@@ -12,11 +12,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -50,7 +47,7 @@ import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
 
 //<color name="colorPrimary">#629f1d</color>
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static boolean activityVisible;
     private static MainActivity instance;
@@ -101,28 +98,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.app_bar_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
+//        Toast.makeText(instance, "onCreate", Toast.LENGTH_SHORT).show();
         Fabric.with(this, new Answers(), new Crashlytics());
         Answers.getInstance().logCustom(new CustomEvent("App opened"));
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
-        //mFirebaseAnalytics.setMinimumSessionDuration(500);
-
-        setContentView(R.layout.app_bar_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         sharedPreferences = getSharedPreferences(myPref, 0);
-        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
-            if (!isAccessibilitySettingsOn(getApplicationContext())) {
-
-                startActivity(new Intent(this, AccessibilityNotEnabled.class));
-//                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME));
-            }
-        } else {
-            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
-        }
+//        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+//            if (!isAccessibilitySettingsOn(getApplicationContext())) {
+//
+//                startActivity(new Intent(this, AccessibilityNotEnabled.class));
+////                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME));
+//            }
+//        } else {
+//            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+//        }
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, sharedPreferences.getString("phone_no", "Phone no not set"));
@@ -135,13 +131,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         balance_card_balance = (TextView) findViewById(R.id.balance_card_balance);
         balance_card_last_updated = (TextView) findViewById(R.id.balance_card_last_updated);
         bank_logo = (ImageView) findViewById(R.id.bank_logo);
-
-        user_detail_card_bank_name.setText(sharedPreferences.getString("bank_name", "your bank name"));
-        user_detail_card_upi_address.setText(sharedPreferences.getString("phone_no", "phone_no") + "@upi");
-        user_detail_card_balance.setText(sharedPreferences.getString("balance", ""));
-        balance_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
-        balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
-
 
         final CardView cardView = (CardView) findViewById(R.id.swipable);
         cardView.setOnTouchListener(new SwipeDismissTouchListener(cardView, null,
@@ -166,52 +155,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .buildRound(String.valueOf(user_detail_card_bank_name.getText().charAt(0)), color);
         bank_logo.setImageDrawable(textDrawable);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
         instance = this;
+
         update_balance = (Button) findViewById(R.id.update_balance);
+        update_balance.setOnClickListener(this);
         other_services = (Button) findViewById(R.id.other_services);
-        login = (Button) findViewById(R.id.login);
+        other_services.setOnClickListener(this);
 
-        update_balance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                sharedPreferences.edit().clear().commit();
-//                ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Toast.makeText(instance, "onStart", Toast.LENGTH_SHORT).show();
+        user_detail_card_bank_name.setText(sharedPreferences.getString("bank_name", "Your Bank"));
+        user_detail_card_upi_address.setText(sharedPreferences.getString("phone_no", "phone_no") + "@upi");
+        user_detail_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
+        balance_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
+        balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.update_balance:
                 askForPermission();
                 makeCall("*123");
-            }
-        });
-
-        other_services.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.other_services:
                 askForPermission();
                 makeCall("*123");
-            }
-        });
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LoginActivity1.class));
-            }
-        });
+                break;
+        }
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -231,6 +207,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
     }
+
+    //@SuppressWarnings("StatementWithEmptyBody")
+//    @Override
+//    public boolean onNavigationItemSelected(MenuItem item) {
+//        // Handle navigation view item clicks here.
+//        int id = item.getItemId();
+//
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+//
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 
     private void showMessage() {
         AlertDialog.Builder alertDialoge = new AlertDialog.Builder(MainActivity.this);
@@ -301,12 +302,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
         Toast.makeText(instance, "Maniactivity onBackPressed", Toast.LENGTH_SHORT).show();
         super.onBackPressed();
     }
@@ -332,31 +327,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override
@@ -403,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(MainActivity.this, LoginActivity1.class));
         }
     }
+
 
 }
 
