@@ -23,6 +23,8 @@
             app:titleTextColor="@android:color/white" />
 
         <include layout="@layout/user_detail_card" />
+
+
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView

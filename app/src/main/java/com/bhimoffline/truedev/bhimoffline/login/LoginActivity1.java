@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
 
+
 /**
  * Created by rahul on 1/4/2017.
  */
@@ -96,6 +97,11 @@ public class LoginActivity1 extends AppCompatActivity {
         Toast.makeText(this, "onBackPressed", Toast.LENGTH_SHORT).show();
         //MainActivity.getInstance().finish();
         moveTaskToBack(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }
 

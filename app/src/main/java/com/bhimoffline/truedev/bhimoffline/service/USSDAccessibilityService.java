@@ -2,11 +2,20 @@ package com.bhimoffline.truedev.bhimoffline.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
+
+import com.bhimoffline.truedev.bhimoffline.R;
+import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,10 +56,9 @@ public class USSDAccessibilityService extends AccessibilityService {
         if (TextUtils.isEmpty(text)) return;
 
         if (isActivityVisible()) {
-            //Toast.makeText(this, "fine", Toast.LENGTH_SHORT).show();
             performGlobalAction(GLOBAL_ACTION_BACK); // This works on 4.1+ only
         } else {
-            //Toast.makeText(this, "outside app", Toast.LENGTH_SHORT).show();
+            // To DO //////////////////////////////////////////////////////////////////////////////////////////////
         }
 
         Intent intent = new Intent();
@@ -63,6 +71,20 @@ public class USSDAccessibilityService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         Log.d(TAG, "onServiceConnected");
+
+        if (AccessibilityServiceBroadcast.isAccessibilityEnabled()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            try {
+                MainActivity.getInstance().startActivity(intent);
+                Log.d(TAG, "opening main activity");
+            } catch (IllegalStateException e) {
+            } catch (ActivityNotFoundException e2) {
+            }
+        } else {
+            Toast.makeText(this, "disabled hai bc", Toast.LENGTH_SHORT).show();
+        }
+
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
         info.flags = AccessibilityServiceInfo.DEFAULT;
         info.packageNames = new String[]{"com.android.phone"};
@@ -85,4 +107,42 @@ public class USSDAccessibilityService extends AccessibilityService {
     public void onInterrupt() {
 
     }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_call)
+                        .setContentTitle("BHIM Offline is disabled")
+                        .setContentText("Please turn it on!");
+
+        Intent resultIntent = new Intent(this, AccessibilityNotEnabled.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(pendingIntent);
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.notify(0, mBuilder.build());
+        Toast.makeText(this, "disabled", Toast.LENGTH_SHORT).show();
+        //   MainActivity.getInstance().startActivity(new Intent(this, AccessibilityNotEnabled.class));
+        return super.onUnbind(intent);
+    }
+
+    // called when user just enables the accessibility service
+//    public boolean isAccessibilityEnabled() {
+//        Log.d(TAG, "waiting for user to enable accessibility service");
+//        try {
+//            String canonicalName = USSDAccessibilityService.class.getCanonicalName();
+//            Log.d(TAG, "canonical name = " + canonicalName);
+//            for (ActivityManager.RunningServiceInfo runningServiceInfo : ((ActivityManager) MainActivity.getInstance().getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE)) {
+//                if (canonicalName.equalsIgnoreCase(runningServiceInfo.service.getClassName())) {
+//                    Log.d(TAG, "enabled");
+//                    return true;
+//                }
+//                Log.d(TAG, runningServiceInfo.service.getClassName().toString() + " " + canonicalName.equalsIgnoreCase(runningServiceInfo.service.getClassName()));
+//            }
+//        } catch (Throwable e) {
+//            //a.b(e);
+//        }
+//        return false;
+//    }
 }

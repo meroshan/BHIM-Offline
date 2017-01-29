@@ -1,6 +1,7 @@
 package com.bhimoffline.truedev.bhimoffline.activity;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,14 +12,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
@@ -47,6 +46,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import io.fabric.sdk.android.Fabric;
 
 import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
+
+
+//<color name="colorPrimary">#629f1d</color>
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -96,68 +98,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         activityVisible = false;
     }
 
-    protected void onResume() {
-        super.onResume();
-        MainActivity.activityResumed();
-
-        sharedPreferences = getSharedPreferences(myPref, 0);
-        //Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
-
-        if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
-            //Toast.makeText(MainActivity.this, sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
-            if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                startActivity(new Intent(this, AccessibilityNotEnabled.class).setFlags(268435456));
-            } else {
-                return;
-            }
-        } else {
-            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //MainActivity.activityPaused();
-        //Toast.makeText(instance, "onPause", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MainActivity.activityStopped();
-        //  Toast.makeText(instance, "onStop", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Toast.makeText(instance, "onDestroy", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Answers(), new Crashlytics());
-        // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        Answers.getInstance().logCustom(new CustomEvent("App opened"));
-        //finish();
 
-        setContentView(R.layout.activity_main);
+        Fabric.with(this, new Answers(), new Crashlytics());
+        Answers.getInstance().logCustom(new CustomEvent("App opened"));
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        //mFirebaseAnalytics.setMinimumSessionDuration(500);
+
+        setContentView(R.layout.app_bar_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         sharedPreferences = getSharedPreferences(myPref, 0);
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
             if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                startActivity(new Intent(this, AccessibilityNotEnabled.class).setFlags(268435456));
+
+                startActivity(new Intent(this, AccessibilityNotEnabled.class));
+//                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME));
             }
         } else {
             startActivity(new Intent(MainActivity.this, LoginActivity1.class));
         }
 
-//        if (!hasPermissions(this, PERMISSIONS)) {
-//            ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
-//        }
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, sharedPreferences.getString("phone_no", "Phone no not set"));
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, sharedPreferences.getString("bank_name", "No bank set"));
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         user_detail_card_bank_name = (TextView) findViewById(R.id.user_detail_card_bank_name);
         user_detail_card_upi_address = (TextView) findViewById(R.id.user_detail_card_upi_address);
@@ -172,8 +142,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         balance_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
         balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         final CardView cardView = (CardView) findViewById(R.id.swipable);
         cardView.setOnTouchListener(new SwipeDismissTouchListener(cardView, null,
@@ -198,24 +166,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .buildRound(String.valueOf(user_detail_card_bank_name.getText().charAt(0)), color);
         bank_logo.setImageDrawable(textDrawable);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
         instance = this;
         update_balance = (Button) findViewById(R.id.update_balance);
         other_services = (Button) findViewById(R.id.other_services);
@@ -245,6 +212,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(MainActivity.this, LoginActivity1.class));
             }
         });
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void askForPermission() {
@@ -310,7 +287,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
         }
-
         return false;
     }
 
@@ -325,16 +301,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+        Toast.makeText(instance, "Maniactivity onBackPressed", Toast.LENGTH_SHORT).show();
+        super.onBackPressed();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -379,4 +358,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //MainActivity.activityPaused();
+        //Toast.makeText(instance, "onPause", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MainActivity.activityStopped();
+        //  Toast.makeText(instance, "onStop", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Toast.makeText(instance, "onDestroy", Toast.LENGTH_SHORT).show();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        //  activityNo = 1;
+        MainActivity.activityResumed();
+
+        sharedPreferences = getSharedPreferences(myPref, 0);
+        //Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
+
+        if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
+            //Toast.makeText(MainActivity.this, sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
+            if (!isAccessibilitySettingsOn(getApplicationContext())) {
+                //Toast.makeText(instance, "Resume", Toast.LENGTH_SHORT).show();
+                {
+                    // Toast.makeText(instance, "from resume " + activityNo, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, AccessibilityNotEnabled.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY));
+                }
+            } else {
+                return;
+            }
+        } else {
+            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+        }
+    }
+
 }
+
