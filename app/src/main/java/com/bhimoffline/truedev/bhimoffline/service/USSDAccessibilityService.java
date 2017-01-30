@@ -97,7 +97,7 @@ public class USSDAccessibilityService extends AccessibilityService {
     private String processUSSDText(List<CharSequence> eventText) {
         for (CharSequence s : eventText) {
             String text = String.valueOf(s).toLowerCase();
-            if (text.contains("rs")) {
+            if (text.contains("rs") || text.contains("spl")) {
                 return text;
             }
         }
@@ -124,7 +124,6 @@ public class USSDAccessibilityService extends AccessibilityService {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(0, mBuilder.build());
         Toast.makeText(this, "disabled", Toast.LENGTH_SHORT).show();
-        //   MainActivity.getInstance().startActivity(new Intent(this, AccessibilityNotEnabled.class));
         return super.onUnbind(intent);
     }
 

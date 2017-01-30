@@ -32,6 +32,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="5"
                 android:gravity="bottom"
+                android:maxLines="1"
                 android:text="XXXXXXXX123"
                 android:textColor="@color/colorPrimaryTextDark"
                 android:textSize="20sp" />
@@ -43,6 +44,7 @@
                 android:layout_gravity="end"
                 android:layout_weight="4"
                 android:gravity="top"
+                android:maxLines="1"
                 android:text="9876543210@upi"
                 android:textColor="@color/colorPrimaryTextDark"
                 android:textSize="12sp" />

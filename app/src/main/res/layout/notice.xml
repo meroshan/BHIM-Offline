@@ -15,6 +15,7 @@
             android:id="@+id/notice_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:paddingTop="4dp"
             android:text="Important notice"
             android:textAlignment="center"

@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView balance_card_balance;
     TextView balance_card_last_updated;
     ImageView bank_logo;
+    ImageView share_whatsApp;
+    ImageView rate_play_store;
+
     String TAG = "tag";
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {Manifest.permission.CALL_PHONE};
@@ -87,10 +90,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         activityVisible = true;
     }
 
-    public static void activityPaused() {
-        //activityVisible = false;
-    }
-
     public static void activityStopped() {
         activityVisible = false;
     }
@@ -102,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        Toast.makeText(instance, "onCreate", Toast.LENGTH_SHORT).show();
         Fabric.with(this, new Answers(), new Crashlytics());
         Answers.getInstance().logCustom(new CustomEvent("App opened"));
 
@@ -131,6 +129,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         balance_card_balance = (TextView) findViewById(R.id.balance_card_balance);
         balance_card_last_updated = (TextView) findViewById(R.id.balance_card_last_updated);
         bank_logo = (ImageView) findViewById(R.id.bank_logo);
+        share_whatsApp = (ImageView) findViewById(R.id.share_whatsApp);
+        rate_play_store = (ImageView) findViewById(R.id.rate_play_store);
+
+        user_detail_card_bank_name.setText(sharedPreferences.getString("bank_name", "Your Bank"));
+        user_detail_card_upi_address.setText(sharedPreferences.getString("phone_no", "phone_no") + "@upi");
 
         final CardView cardView = (CardView) findViewById(R.id.swipable);
         cardView.setOnTouchListener(new SwipeDismissTouchListener(cardView, null,
@@ -161,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         update_balance.setOnClickListener(this);
         other_services = (Button) findViewById(R.id.other_services);
         other_services.setOnClickListener(this);
-
+        share_whatsApp.setOnClickListener(this);
+        rate_play_store.setOnClickListener(this);
     }
 
     @Override
@@ -169,8 +173,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
 
         // Toast.makeText(instance, "onStart", Toast.LENGTH_SHORT).show();
-        user_detail_card_bank_name.setText(sharedPreferences.getString("bank_name", "Your Bank"));
-        user_detail_card_upi_address.setText(sharedPreferences.getString("phone_no", "phone_no") + "@upi");
         user_detail_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
         balance_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
         balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
@@ -181,13 +183,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.update_balance:
                 askForPermission();
-                makeCall("*123");
+                makeCall("*111");
                 break;
             case R.id.other_services:
                 askForPermission();
-                makeCall("*123");
+                makeCall("*111");
+                break;
+            case R.id.share_whatsApp:
+                Toast.makeText(instance, "Saare friends ko share karo BC", Toast.LENGTH_SHORT).show();
+                shareOnWhatsApp();
+                break;
+            case R.id.rate_play_store:
+                Toast.makeText(instance, "5 hi rate karna BC", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void shareOnWhatsApp() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String message = "download BHIM Offline and see your bank balance without Internet";
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+        startActivity(shareIntent);
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -208,31 +225,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    //@SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
-
     private void showMessage() {
         AlertDialog.Builder alertDialoge = new AlertDialog.Builder(MainActivity.this);
         alertDialoge.setTitle("Permission Required")
@@ -248,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
-                        System.exit(0);
                     }
                 });
         alertDialoge.show();
@@ -346,7 +337,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Toast.makeText(instance, "onDestroy", Toast.LENGTH_SHORT).show();
     }
 
     protected void onResume() {
@@ -373,7 +363,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(MainActivity.this, LoginActivity1.class));
         }
     }
-
-
 }
-

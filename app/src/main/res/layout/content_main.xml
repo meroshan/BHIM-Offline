@@ -30,15 +30,15 @@
 
             <include layout="@layout/notice" />
 
-            <include layout="@layout/share_app" />
             <!--<include layout="@layout/laterst_transactions_card" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:layout_marginTop="12dp"
-                android:text="@string/large_text"
+            <include layout="@layout/help" />
+
+            <include layout="@layout/share_app" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
                 android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>

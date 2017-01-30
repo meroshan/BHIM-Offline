@@ -33,7 +33,7 @@ public class UUSDBroadcastReceiver extends BroadcastReceiver {
         if (keywords.contains("cr")) {
             int pos = keywords.indexOf("cr");
             balance = "Rs " + keywords.get(pos - 1);
-        } else if (keywords.contains("rs")) {
+        } else if (keywords.contains("rs") || keywords.contains("spl")) {
             int pos = keywords.indexOf("rs");
             String[] s = (keywords.get(pos + 1)).split(",");
             balance = "Rs " + s[0];
