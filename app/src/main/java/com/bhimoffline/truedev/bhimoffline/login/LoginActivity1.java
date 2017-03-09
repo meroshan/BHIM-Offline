@@ -10,10 +10,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
+
+import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.BANK_NAME;
+import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.LOGGED;
+import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.PHONE_NO;
 
 
 /**
@@ -32,6 +35,13 @@ public class LoginActivity1 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sharedPreferences = getSharedPreferences(myPref, 0);
+        if (sharedPreferences.getBoolean(LOGGED, false)) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
         setContentView(R.layout.activity_login1);
 
         login_phone_no = (TextInputEditText) findViewById(R.id.login_mobile_no);
@@ -46,7 +56,7 @@ public class LoginActivity1 extends AppCompatActivity {
                 "Indian Bank", "Indian Overseas Bank", "IndusInd Bank", "Janata Sahakari Bank", "Karnataka Bank Ltd", "Karur Vysya Bank", "Kotak Mahindra Bank",
                 "Mehsan Urban Co-op Bank", "Nainital Bank", "NKGSB Co-op Bank", "Oriental Bank of Commerce", "Punjab & Maharastra Co-op Bank", "Punjab National Bank",
                 "Punjab & Sind Bank", "RBL Bank", "Saraswat Bank", "South Indian Bank", "State Bank of Bikaner & Jaipur", "State Bank of Hyderabad",
-                "State Bank of India", "State Bank of Mysore", "State Bank of Patiala", "State Bank of Travancore", "Syndicate Bank", "Tamilnad Mercantile Bank",
+                "Sbi", "State Bank of India", "State Bank of Mysore", "State Bank of Patiala", "State Bank of Travancore", "Syndicate Bank", "Tamilnad Mercantile Bank",
                 "UCO Bank", "Union Bank of India", "United Bank of India", "Vijaya Bank", "Yes Bank"};
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, bankNames);
@@ -57,7 +67,8 @@ public class LoginActivity1 extends AppCompatActivity {
             public void onClick(View v) {
                 if (login_phone_no.getText().toString().length() == 10 && (login_bank_name.getText().toString().length() > 0)) {
                     if (saveToSharedPreference(login_phone_no.getText().toString(), login_bank_name.getText().toString())) {
-                        startActivity(new Intent(MainActivity.getInstance(), MainActivity.class));
+                        startActivity(new Intent(LoginActivity1.this, MainActivity.class));
+                        finish();
                     }
                 }
             }
@@ -82,19 +93,53 @@ public class LoginActivity1 extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
+        if (sharedPreferences.getBoolean(LOGGED, false) == false) {
+            saveCredentialsOnPause(login_phone_no.getText().toString(), login_bank_name.getText().toString());
+        }
+    }
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString(PHONE_NO, login_phone_no.getText().toString());
+//        outState.putString(BANK_NAME, login_bank_name.getText().toString());
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        login_bank_name.setText(savedInstanceState.getString(BANK_NAME));
+//        login_phone_no.setSelection(sharedPreferences.getString(PHONE_NO, "").length());
+//
+//        login_phone_no.setText(savedInstanceState.getString(PHONE_NO));
+//        login_bank_name.setSelection(sharedPreferences.getString(BANK_NAME, "").length());
+//    }
+
     public Boolean saveToSharedPreference(String phone_no, String bank_name) {
+        sharedPreferences = getSharedPreferences(myPref, 0);
+        editor = sharedPreferences.edit();
+        editor.putString(PHONE_NO, phone_no);
+        editor.putString(BANK_NAME, bank_name);
+        editor.putBoolean(LOGGED, true);
+        return editor.commit();
+    }
+
+    public void saveCredentialsOnPause(String phone_no, String bank_name) {
         sharedPreferences = getSharedPreferences(myPref, 0);
         editor = sharedPreferences.edit();
         editor.putString("phone_no", phone_no);
         editor.putString("bank_name", bank_name);
-        editor.putBoolean("isLoggedIn", true);
-        return editor.commit();
+        editor.commit();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Toast.makeText(this, "onBackPressed", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "onBackPressed", Toast.LENGTH_SHORT).show();
         //MainActivity.getInstance().finish();
         moveTaskToBack(true);
     }
@@ -102,19 +147,14 @@ public class LoginActivity1 extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+//        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
+        sharedPreferences = getSharedPreferences(myPref, 0);
+        if (sharedPreferences.getBoolean(LOGGED, false) == false) {
+            login_phone_no.setText(sharedPreferences.getString(PHONE_NO, "").toString());
+            login_phone_no.setSelection(sharedPreferences.getString(PHONE_NO, "").length());
+
+            login_bank_name.setText(sharedPreferences.getString(BANK_NAME, "").toString());
+            login_bank_name.setSelection(sharedPreferences.getString(BANK_NAME, "").length());
+        }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

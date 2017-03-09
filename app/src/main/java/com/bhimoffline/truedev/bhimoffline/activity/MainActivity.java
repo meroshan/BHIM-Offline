@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +32,6 @@ import android.widget.Toast;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bhimoffline.truedev.bhimoffline.R;
-import com.bhimoffline.truedev.bhimoffline.login.LoginActivity1;
 import com.bhimoffline.truedev.bhimoffline.service.AccessibilityNotEnabled;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
 import com.bhimoffline.truedev.bhimoffline.utils.SwipeDismissTouchListener;
@@ -44,14 +44,17 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
 
-
 //<color name="colorPrimary">#629f1d</color>
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public final static String LOGGED = "isLoggedIn";
+    public final static String PHONE_NO = "phone_no";
+    public final static String BANK_NAME = "bank_name";
+    public final static String BALANCE = "balance";
     private static boolean activityVisible;
     private static MainActivity instance;
-    Button update_balance, other_services, login;
+    Button update_balance, other_services, get_started_install;
     SharedPreferences sharedPreferences;
     TextView user_detail_card_bank_name;
     TextView user_detail_card_upi_address;
@@ -131,9 +134,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bank_logo = (ImageView) findViewById(R.id.bank_logo);
         share_whatsApp = (ImageView) findViewById(R.id.share_whatsApp);
         rate_play_store = (ImageView) findViewById(R.id.rate_play_store);
+        get_started_install = (Button) findViewById(R.id.get_started_install);
 
-        user_detail_card_bank_name.setText(sharedPreferences.getString("bank_name", "Your Bank"));
-        user_detail_card_upi_address.setText(sharedPreferences.getString("phone_no", "phone_no") + "@upi");
+        instance = this;
+
+        update_balance = (Button) findViewById(R.id.update_balance);
+        update_balance.setOnClickListener(this);
+        other_services = (Button) findViewById(R.id.other_services);
+        other_services.setOnClickListener(this);
+        share_whatsApp.setOnClickListener(this);
+        rate_play_store.setOnClickListener(this);
+        get_started_install.setOnClickListener(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        Toast.makeText(instance, "saving state", Toast.LENGTH_SHORT).show();
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         final CardView cardView = (CardView) findViewById(R.id.swipable);
         cardView.setOnTouchListener(new SwipeDismissTouchListener(cardView, null,
@@ -151,30 +173,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }));
 
+        String bank_name = sharedPreferences.getString("bank_name", "Bank Name");
+        String mobile_no = sharedPreferences.getString("phone_no", "Mobile no");
+        String balance = sharedPreferences.getString(BALANCE, "Balance");
+
+        user_detail_card_bank_name.setText(bank_name);
+        user_detail_card_upi_address.setText(mobile_no + "@upi");
+
         ColorGenerator colorGenerator = ColorGenerator.MATERIAL;
         int color = colorGenerator.getRandomColor();
 
-        TextDrawable textDrawable = TextDrawable.builder()
-                .buildRound(String.valueOf(user_detail_card_bank_name.getText().charAt(0)), color);
+        char bankInitial;
+        if (bank_name.length() > 0) {
+            bankInitial = bank_name.charAt(0);
+        } else {
+            // To Do - add crash reporting that bank name is empty
+            bankInitial = 'B';
+        }
+        TextDrawable textDrawable = TextDrawable.builder().buildRound(String.valueOf(bankInitial), color);
         bank_logo.setImageDrawable(textDrawable);
-
-        instance = this;
-
-        update_balance = (Button) findViewById(R.id.update_balance);
-        update_balance.setOnClickListener(this);
-        other_services = (Button) findViewById(R.id.other_services);
-        other_services.setOnClickListener(this);
-        share_whatsApp.setOnClickListener(this);
-        rate_play_store.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Toast.makeText(instance, "onStart", Toast.LENGTH_SHORT).show();
-        user_detail_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
-        balance_card_balance.setText(sharedPreferences.getString("balance", "Balance"));
+        user_detail_card_balance.setText(balance);
+        balance_card_balance.setText(balance);
         balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
     }
 
@@ -183,11 +202,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.update_balance:
                 askForPermission();
-                makeCall("*111");
+                makeCall("*123");
                 break;
             case R.id.other_services:
                 askForPermission();
-                makeCall("*111");
+                makeCall("*123");
                 break;
             case R.id.share_whatsApp:
                 Toast.makeText(instance, "Saare friends ko share karo BC", Toast.LENGTH_SHORT).show();
@@ -195,6 +214,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.rate_play_store:
                 Toast.makeText(instance, "5 hi rate karna BC", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.get_started_install:
+                Toast.makeText(instance, "Opening Play Store", Toast.LENGTH_SHORT).show();
+                Intent phonePe = new Intent(Intent.ACTION_VIEW);
+                phonePe.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.phonepe.app"));
+                startActivity(phonePe);
                 break;
         }
     }
@@ -229,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder alertDialoge = new AlertDialog.Builder(MainActivity.this);
         alertDialoge.setTitle("Permission Required")
                 .setCancelable(false)
-                .setMessage("BHIMOfffline doen't work without phone permission\nWe just need to make a call to fetch your balance. So please allow this permission.")
+                .setMessage("BHIMOffline doesn't work without phone permission.\nWe just need to make a call to fetch your balance. So please allow this permission.")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -282,18 +307,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    public void makeCall(String ussdCode) {
-        Intent fetchBalanceIntent = new Intent(Intent.ACTION_CALL);
-        fetchBalanceIntent.setData(Uri.parse("tel:" + ussdCode + Uri.encode("#")));
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        startActivity(fetchBalanceIntent);
+    public void makeCall(final String ussdCode) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Intent fetchBalanceIntent = new Intent(Intent.ACTION_CALL);
+                //fetchBalanceIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                fetchBalanceIntent.setData(Uri.parse("tel:" + ussdCode + Uri.encode("#")));
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+
+                //To Do - for the first time after getting permission, fetchBalanceIntent is not starting. Fix this.
+                startActivity(fetchBalanceIntent);
+            }
+        }).start();
     }
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(instance, "Maniactivity onBackPressed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(instance, "MainActivity onBackPressed", Toast.LENGTH_SHORT).show();
         super.onBackPressed();
     }
 
@@ -331,7 +364,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         MainActivity.activityStopped();
-        //  Toast.makeText(instance, "onStop", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -341,26 +373,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     protected void onResume() {
         super.onResume();
-        //  activityNo = 1;
         MainActivity.activityResumed();
 
+        Log.d(TAG, "Main activity onResume called");
         sharedPreferences = getSharedPreferences(myPref, 0);
         //Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
 
-        if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
-            //Toast.makeText(MainActivity.this, sharedPreferences.getBoolean("isLoggedIn", false) + "", Toast.LENGTH_SHORT).show();
-            if (!isAccessibilitySettingsOn(getApplicationContext())) {
-                //Toast.makeText(instance, "Resume", Toast.LENGTH_SHORT).show();
-                {
-                    // Toast.makeText(instance, "from resume " + activityNo, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, AccessibilityNotEnabled.class)
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY));
-                }
-            } else {
-                return;
+        // No need to check for if used is logged in or not as MainActivity is started only if used is logged in
+        //if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
+        if (!isAccessibilitySettingsOn(getApplicationContext())) {
+            {
+                startActivity(new Intent(this, AccessibilityNotEnabled.class));
+//                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY));
             }
         } else {
-            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+            return;
         }
+        //} else {
+        //    startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+        //}
     }
 }

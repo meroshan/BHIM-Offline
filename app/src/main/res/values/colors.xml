@@ -7,7 +7,7 @@
     <color name="colorFillDisabled">#d6d6db</color>
     <color name="colorButtonBrandFillFocused">@color/colorBrandPrimaryAccent</color>
     <color name="colorBrandPrimaryAccent">#FF629F1D</color>
-    <color name="colorButtonBrandFillPressed">@color/colorBrandPrimaryAccent</color>
+    <color name="colorButtonBrandFillPressed">@color/colorPrimaryDark</color>
     <color name="colorButtonBrandFill">@color/colorBrandPrimary</color>
     <color name="colorBrandPrimary">#FF629F1D</color>
     <color name="colorPrimaryTextDark">#323232</color>

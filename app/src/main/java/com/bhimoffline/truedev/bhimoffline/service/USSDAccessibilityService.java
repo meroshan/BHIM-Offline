@@ -20,7 +20,6 @@ import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
 import java.util.Collections;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
 import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivityVisible;
 
 /**
@@ -28,6 +27,8 @@ import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivi
  */
 
 public class USSDAccessibilityService extends AccessibilityService {
+    String TAG = "tag";
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Log.d(TAG, "onAccessibilityEvent");
@@ -73,18 +74,22 @@ public class USSDAccessibilityService extends AccessibilityService {
         super.onServiceConnected();
         Log.d(TAG, "onServiceConnected");
 
-        if (AccessibilityServiceBroadcast.isAccessibilityEnabled()) {
+        //if (AccessibilityServiceBroadcast.isAccessibilityEnabled())
+        {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            //addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             try {
-                MainActivity.getInstance().startActivity(intent);
+                startActivity(intent);
                 Log.d(TAG, "opening main activity");
             } catch (IllegalStateException e) {
             } catch (ActivityNotFoundException e2) {
             }
-        } else {
-            Toast.makeText(this, "disabled hai bc", Toast.LENGTH_SHORT).show();
         }
+//        else{
+//            Toast.makeText(this, "disabled hai bc", Toast.LENGTH_SHORT).show();
+//        }
 
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
         info.flags = AccessibilityServiceInfo.DEFAULT;

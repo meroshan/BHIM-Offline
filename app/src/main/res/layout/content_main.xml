@@ -32,7 +32,7 @@
 
             <!--<include layout="@layout/laterst_transactions_card" />-->
 
-            <include layout="@layout/help" />
+            <include layout="@layout/get_started" />
 
             <include layout="@layout/share_app" />
 

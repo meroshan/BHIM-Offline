@@ -1,22 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="#ffffff"
+    android:background="@drawable/login_back"
     android:gravity="center"
-    android:padding="32dp">
+    android:orientation="vertical"
+    android:paddingBottom="0dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
-    <ScrollView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="24dp"
+        android:text="BHIM Offline"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="32dp" />
+
+    <!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scrollbars="none">-->
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none">
+        android:layout_margin="0dp"
+        android:layout_marginBottom="@dimen/card_default_margin"
+        android:layout_marginLeft="@dimen/card_default_margin"
+        android:layout_marginRight="@dimen/card_default_margin"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
+            android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="24dp"
+            android:gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end"
             android:orientation="vertical">
 
             <ImageView
@@ -31,7 +60,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="0dp"
                 android:maxLines="1"
-                android:padding="16dp"
+                android:padding="24dp"
                 android:text="Enter details to continue"
                 android:textAlignment="center"
                 android:textSize="20dp" />
@@ -53,34 +82,55 @@
                     android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="00dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="0dp"
+                android:background="@color/colorPrimary"
+                android:visibility="gone" />
 
             <AutoCompleteTextView
                 android:id="@+id/login_bank_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:completionThreshold="1"
                 android:drawableLeft="@drawable/ic_bank"
                 android:drawablePadding="16dp"
                 android:hint="Select bank from list"
                 android:inputType="text"
                 android:maxLines="1" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimary"
+                android:visibility="gone" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="24dp"
                 android:gravity="center">
 
                 <Button
                     android:id="@+id/login_continue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:backgroundTint="@color/colorBrandPrimaryAccent"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="32dp"
+                    android:background="@drawable/round_button"
+                    android:maxLines="1"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="40dp"
                     android:text="Continue"
-                    android:textAllCaps="false"
+                    android:textAllCaps="true"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="18dp" />
             </RelativeLayout>
 
             <View
@@ -119,28 +169,33 @@
                         android:id="@+id/playstore_bhim"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
+                        android:layout_margin="16dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/colorBrandPrimaryAccent"
+                        android:background="@drawable/round_button"
                         android:padding="0dp"
                         android:text="BHIM"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp" />
+                        android:textSize="18dp" />
 
                     <Button
                         android:id="@+id/playstore_phonepe"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
+                        android:layout_margin="16dp"
                         android:layout_weight="1"
-                        android:backgroundTint="@color/colorBrandPrimaryAccent"
+                        android:background="@drawable/round_button"
                         android:padding="0dp"
                         android:text="PhonePe"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp" />
+                        android:textSize="18dp" />
                 </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="000dp" />
         </LinearLayout>
-    </ScrollView>
+    </android.support.v7.widget.CardView>
+    <!--</ScrollView>-->
 </LinearLayout>

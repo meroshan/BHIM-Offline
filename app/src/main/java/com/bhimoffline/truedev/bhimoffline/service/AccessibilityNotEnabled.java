@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,6 +24,8 @@ public class AccessibilityNotEnabled extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.enable_accessibility_service);
 
+        Log.d("tag", "Accessibility Not Enabled called");
+
         go_to_setting = (Button) findViewById(R.id.go_to_setting);
         go_to_setting.setOnClickListener(
                 new View.OnClickListener() {
@@ -30,6 +33,8 @@ public class AccessibilityNotEnabled extends Activity {
                     public void onClick(View v) {
                         Intent intent = new Intent("android.settings.ACCESSIBILITY_SETTINGS");
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         try {
                             startActivity(intent);
                         } catch (ActivityNotFoundException e) {
@@ -38,7 +43,6 @@ public class AccessibilityNotEnabled extends Activity {
                         finish();
                     }
                 }
-
         );
     }
 

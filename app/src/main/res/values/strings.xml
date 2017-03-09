@@ -115,4 +115,18 @@
         completions."
     </string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="step1a">1. First, download and install the PhonePe App.</string>
+    <string name="step1b">the PhonePe App.</string>
+    <string name="download_phonepe">Download PhonePe</string>
+    <string name="step2">2. Open the app and follow the initial instructions.</string>
+    <string name="step3">3. Verify your mobile number(standard SMS charges may apply). In case of dual sim, select the SIM that is linked to your bank account.</string>
+    <string name="step4">4. Enter your name, valid email and set 4 Digit password.</string>
+    <string name="step5">5. Proceed to the next step and click on Create New VPA(This will be your upi address).</string>
+    <string name="step6">6. Now select your bank and then your bank detalis will be fetched automatically.</string>
+    <string name="heading_register_for_upi">If you haven\'t registered on UPI, follow these steps</string>
+    <string name="step7">7. Click on \'Set MPIN\'.</string>
+    <string name="step8">8. Enter details of your debit card and click on verify.</string>
+    <string name="step9">9. Now you will get an OTP from your bank. Enter that OTP.</string>
+    <string name="step10">10. Now enter a 6-digit UPI PIN and re-enter to confirm. Please note that this UPI Pin will be used in the future for your all transaction. So don\'t share this pin to anyone and remember it.</string>
+    <string name="step11">11. After successful registration click OK and open BHIM Offline app and click on UPDATE BALANCE.</string>
 </resources>
