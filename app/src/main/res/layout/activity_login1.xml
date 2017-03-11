@@ -17,7 +17,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="24dp"
-        android:text="BHIM Offline"
+        android:text="BHiM Offline"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="32dp" />
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/ic_logo" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -63,7 +63,8 @@
                 android:padding="24dp"
                 android:text="Enter details to continue"
                 android:textAlignment="center"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -157,7 +158,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Register your mobile here"
+                    android:text="First register your mobile on UPI by downloading PhonePe or BHIM app"
                     android:textSize="16sp" />
 
                 <LinearLayout
@@ -175,7 +176,8 @@
                         android:padding="0dp"
                         android:text="BHIM"
                         android:textColor="@android:color/white"
-                        android:textSize="18dp" />
+                        android:textSize="18dp"
+                        android:visibility="gone" />
 
                     <Button
                         android:id="@+id/playstore_phonepe"
@@ -188,7 +190,8 @@
                         android:text="PhonePe"
                         android:textAllCaps="false"
                         android:textColor="@android:color/white"
-                        android:textSize="18dp" />
+                        android:textSize="18dp"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
 

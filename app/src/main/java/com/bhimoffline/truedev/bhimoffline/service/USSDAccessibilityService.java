@@ -2,19 +2,13 @@ package com.bhimoffline.truedev.bhimoffline.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.Toast;
 
-import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
 
 import java.util.Collections;
@@ -34,7 +28,8 @@ public class USSDAccessibilityService extends AccessibilityService {
         Log.d(TAG, "onAccessibilityEvent");
 
         AccessibilityNodeInfo source = event.getSource();
-    /* if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !event.getClassName().equals("android.app.AlertDialog")) { // android.app.AlertDialog is the standard but not for all phones  */
+        //if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !event.getClassName().equals("android.app.AlertDialog"))
+        // android.app.AlertDialog is the standard but not for all phones
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !String.valueOf(event.getClassName()).contains("AlertDialog")) {
             return;
         }
@@ -102,7 +97,7 @@ public class USSDAccessibilityService extends AccessibilityService {
     private String processUSSDText(List<CharSequence> eventText) {
         for (CharSequence s : eventText) {
             String text = String.valueOf(s).toLowerCase();
-            if (text.contains("rs") || text.contains("spl")) {
+            if (text.toLowerCase().contains("rs") && text.contains("your") && text.contains("balance")) {
                 return text;
             }
         }
@@ -116,19 +111,19 @@ public class USSDAccessibilityService extends AccessibilityService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_call)
-                        .setContentTitle("BHIM Offline is disabled")
-                        .setContentText("Please turn it on!");
-
-        Intent resultIntent = new Intent(this, AccessibilityNotEnabled.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(pendingIntent);
-
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        manager.notify(0, mBuilder.build());
-        Toast.makeText(this, "disabled", Toast.LENGTH_SHORT).show();
+//        NotificationCompat.Builder mBuilder =
+//                new NotificationCompat.Builder(this)
+//                        .setSmallIcon(R.drawable.ic_call)
+//                        .setContentTitle("BHiM Offline is disabled")
+//                        .setContentText("Please turn it on!");
+//
+//        Intent resultIntent = new Intent(this, AccessibilityNotEnabled.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        mBuilder.setContentIntent(pendingIntent);
+//
+//        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        manager.notify(0, mBuilder.build());
+        //Toast.makeText(this, "disabled", Toast.LENGTH_SHORT).show();
         return super.onUnbind(intent);
     }
 

@@ -33,8 +33,6 @@ public class AccessibilityNotEnabled extends Activity {
                     public void onClick(View v) {
                         Intent intent = new Intent("android.settings.ACCESSIBILITY_SETTINGS");
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         try {
                             startActivity(intent);
                         } catch (ActivityNotFoundException e) {
@@ -49,7 +47,6 @@ public class AccessibilityNotEnabled extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        Toast.makeText(this, "ANE onBackPressed", Toast.LENGTH_SHORT).show();
         Intent goHome = new Intent(Intent.ACTION_MAIN);
         goHome.addCategory(Intent.CATEGORY_HOME);
         goHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

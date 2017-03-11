@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="16dp"
-                    android:text="@string/accessibilty_label"
+                    android:text="@string/accessibility_label"
                     android:textColor="@android:color/black"
                     android:textSize="24sp" />
 
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="36dp"
                 android:layout_marginRight="36dp"
-                android:text="@string/accessibilty_service_not_enabled_message"
+                android:text="@string/accessibility_service_not_enabled_message"
                 android:textAlignment="center"
                 android:textSize="16sp" />
 
@@ -88,6 +88,12 @@
                     android:textSize="20sp"
                     app:backgroundTint="@color/colorBrandPrimaryAccent" />
             </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/large_text"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

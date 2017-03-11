@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
@@ -27,20 +26,36 @@ public class UUSDBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String message = intent.getStringExtra("message");
+
+        //Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         String words[] = message.toLowerCase().split("\\s");
-        String balance = "Unable to fetch balance, try again";
+        String balance = "Unable to fetch balance";
         ArrayList<String> keywords = new ArrayList<String>(Arrays.asList(words));
-        if (keywords.contains("cr")) {
-            int pos = keywords.indexOf("cr");
-            balance = "Rs " + keywords.get(pos - 1);
-        } else if (keywords.contains("rs") || keywords.contains("spl")) {
-            int pos = keywords.indexOf("rs");
-            String[] s = (keywords.get(pos + 1)).split(",");
-            balance = "Rs " + s[0];
+        if (keywords.contains("your") && keywords.contains("balance") && (keywords.contains("rs") || keywords.contains("rs."))) {
+            int pos = 0;
+            if (keywords.contains("rs")) {
+                pos = keywords.indexOf("rs");
+            } else {
+                if (keywords.contains("rs.")) {
+                    pos = keywords.indexOf("rs.");
+                }
+            }
+            //Toast.makeText(context, "pos=" + pos + " " + keywords.get(pos + 1), Toast.LENGTH_SHORT).show();
+            if (pos + 1 <= keywords.size()) {
+                String[] s = (keywords.get(pos + 1)).split(",");
+                balance = "Rs " + s[0];
+            }
         }
+//        else if (keywords.contains("rs") || keywords.contains("spl")) {
+//            int pos = keywords.indexOf("rs");
+//            String[] s = (keywords.get(pos + 1)).split(",");
+//            balance = "Rs " + s[0];
+//        }
 
         TextView balance_balance_card = (TextView) MainActivity.getInstance().findViewById(R.id.balance_card_balance);
-        if (balance.equals("Unable to fetch balance, try again")) {
+        //TextView ussd_message = (TextView) MainActivity.getInstance().findViewById(R.id.ussd_message);
+        //ussd_message.setText(message);
+        if (balance.equals("Unable to fetch balance")) {
             balance_balance_card.setTextSize(24);
         } else {
             balance_balance_card.setTextSize(48);
@@ -58,6 +73,6 @@ public class UUSDBroadcastReceiver extends BroadcastReceiver {
         sharedPreferences.edit().putString("balance", balance).commit();
         sharedPreferences.edit().putString("last_updated", date).commit();
 
-        Toast.makeText(MainActivity.getInstance(), "message :" + balance, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.getInstance(), "message :" + balance, Toast.LENGTH_SHORT).show();
     }
 }

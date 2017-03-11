@@ -1,7 +1,6 @@
 package com.bhimoffline.truedev.bhimoffline.activity;
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,14 +15,12 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,7 +31,6 @@ import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.service.AccessibilityNotEnabled;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
-import com.bhimoffline.truedev.bhimoffline.utils.SwipeDismissTouchListener;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -157,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
 
+        /*
         final CardView cardView = (CardView) findViewById(R.id.swipable);
         cardView.setOnTouchListener(new SwipeDismissTouchListener(cardView, null,
                 new SwipeDismissTouchListener.DismissCallbacks() {
@@ -172,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         ((ViewGroup) cardView.getParent()).removeView(cardView);
                     }
                 }));
+        */
 
         String bank_name = sharedPreferences.getString("bank_name", "Bank Name");
         String mobile_no = sharedPreferences.getString("phone_no", "Mobile no");
@@ -202,49 +200,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.update_balance:
                 askForPermission();
-                makeCall("*123");
+                makeCall("*99*3");
                 break;
             case R.id.other_services:
                 askForPermission();
-                makeCall("*123");
+                makeCall("*99");
                 break;
             case R.id.share_whatsApp:
-                Toast.makeText(instance, "Saare friends ko share karo BC", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(instance, "Saare friends ko share karo BC", Toast.LENGTH_SHORT).show();
                 shareOnWhatsApp();
                 break;
             case R.id.rate_play_store:
-                Toast.makeText(instance, "5 hi rate karna BC", Toast.LENGTH_SHORT).show();
+                Intent bhimOffline = new Intent(Intent.ACTION_VIEW);
+                bhimOffline.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.sohaari.bhimoffline"));
+                startActivity(bhimOffline);
                 break;
-            case R.id.get_started_install:
-                Toast.makeText(instance, "Opening Play Store", Toast.LENGTH_SHORT).show();
-                Intent phonePe = new Intent(Intent.ACTION_VIEW);
-                phonePe.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.phonepe.app"));
-                startActivity(phonePe);
-                break;
+//            case R.id.get_started_install:
+//                Toast.makeText(instance, "Opening Play Store", Toast.LENGTH_SHORT).show();
+//                Intent phonePe = new Intent(Intent.ACTION_VIEW);
+//                phonePe.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.phonepe.app"));
+//                startActivity(phonePe);
+//                break;
         }
     }
 
     private void shareOnWhatsApp() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        String message = "download BHIM Offline and see your bank balance without Internet";
+        String message = "Don't have Internet connection and still want to check your bank balance and transact money? Download BHiM Offline" +
+                " app and experience offline banking on a click.\n https://play.google.com/store/apps/details?id=com.sohaari.bhimoffline";
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
         startActivity(shareIntent);
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private boolean isMyServiceRunning(Class<?> serviceClass) {
+//        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (serviceClass.getName().equals(service.service.getClassName())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     private void askForPermission() {
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            Boolean temp = ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CALL_PHONE);
+            //Boolean temp = ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CALL_PHONE);
             showMessage();
             return;
         }
@@ -254,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder alertDialoge = new AlertDialog.Builder(MainActivity.this);
         alertDialoge.setTitle("Permission Required")
                 .setCancelable(false)
-                .setMessage("BHIMOffline doesn't work without phone permission.\nWe just need to make a call to fetch your balance. So please allow this permission.")
+                .setMessage("BHiM Offline doesn't work without phone permission.\nWe just need to make a call to fetch your balance. So please allow this permission.")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -320,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //To Do - for the first time after getting permission, fetchBalanceIntent is not starting. Fix this.
                 startActivity(fetchBalanceIntent);
+
             }
         }).start();
     }
@@ -346,8 +348,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_get_help) {
+            sharedPreferences = getSharedPreferences(myPref, 0);
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto", "sohaariapps@gmail.com", null));
+            //intent.setType("message/rfc822");
+            //intent.putExtra(Intent.EXTRA_EMAIL, "sohaariapps@gmail.com");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback from " + sharedPreferences.getString(PHONE_NO, "0123456789").toString());
+            intent.putExtra(Intent.EXTRA_TEXT, "My feedback\n");
+
+            startActivity(Intent.createChooser(intent, "Send Email"));
+            //return true;
         }
 
         return super.onOptionsItemSelected(item);

@@ -2,7 +2,6 @@ package com.bhimoffline.truedev.bhimoffline.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -74,23 +73,23 @@ public class LoginActivity1 extends AppCompatActivity {
             }
         });
 
-        playstore_bhim.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent bhimApp = new Intent(Intent.ACTION_VIEW);
-                bhimApp.setData(Uri.parse("https://play.google.com/store/apps/details?id=in.org.npci.upiapp"));
-                startActivity(bhimApp);
-            }
-        });
-
-        playstore_phonepe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent phonepe = new Intent(Intent.ACTION_VIEW);
-                phonepe.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.phonepe.app"));
-                startActivity(phonepe);
-            }
-        });
+//        playstore_bhim.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent bhimApp = new Intent(Intent.ACTION_VIEW);
+//                bhimApp.setData(Uri.parse("https://play.google.com/store/apps/details?id=in.org.npci.upiapp"));
+//                startActivity(bhimApp);
+//            }
+//        });
+//
+////        playstore_phonepe.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View v) {
+//                Intent phonepe = new Intent(Intent.ACTION_VIEW);
+//                phonepe.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.phonepe.app"));
+//                startActivity(phonepe);
+//            }
+//        });
     }
 
     @Override
