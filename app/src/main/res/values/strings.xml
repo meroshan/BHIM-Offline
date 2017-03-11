@@ -5,12 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="exit">Exit</string>
-    <string name="notice">1. Your mobile no must be registered with your bank account.\n2. As per government rule the service providers may charge for each transactions.</string>
+    <string name="notice">1. Your mobile no must be registered with your bank account.\n2. The service providers may charge for each transactions.</string>
     <string name="description">We need this service to fetch balance from pop-up messages. It is absolutely safe to use.</string>
     <string name="action_settings">Get Help</string>
     <string name="latest_transactions">Latest transactions</string>
     <string name="accessibility_service_not_enabled_message">"If accessibility service is turned off for this app, we can't fetch your bank balance. We read USSD message only to fetch your bank balance, that's it. So it is absolutely safe to use."</string>
-    <string name="accessibility_label"><b>😊😊 BHiM Offline 😊😊</b></string>
+    <string name="accessibility_label"><b>●● BHiM Offline ●●</b></string>
     <string name="large_text">
         "██Material is the metaphor.\n\n"
 
@@ -130,4 +130,7 @@
     <string name="step11">11. After successful registration click OK and open BHiM Offline app and click on UPDATE BALANCE.</string>
     <string name="registration_notice">Mobile no must be registered with your bank account</string>
     <string name="heading_notice"><b>Important Notice</b></string>
+    <string name="go_to_setting">Go to Setting</string>
+    <string name="please_turn_on">Please turn on</string>
+    <string name="from_accessibility_settings">from accessibility settings</string>
 </resources>

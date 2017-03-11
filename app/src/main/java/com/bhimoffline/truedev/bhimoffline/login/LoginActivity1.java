@@ -12,6 +12,9 @@ import android.widget.Button;
 
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 
 import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.BANK_NAME;
 import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.LOGGED;
@@ -34,6 +37,7 @@ public class LoginActivity1 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         sharedPreferences = getSharedPreferences(myPref, 0);
         if (sharedPreferences.getBoolean(LOGGED, false)) {
@@ -58,7 +62,7 @@ public class LoginActivity1 extends AppCompatActivity {
                 "Sbi", "State Bank of India", "State Bank of Mysore", "State Bank of Patiala", "State Bank of Travancore", "Syndicate Bank", "Tamilnad Mercantile Bank",
                 "UCO Bank", "Union Bank of India", "United Bank of India", "Vijaya Bank", "Yes Bank"};
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, bankNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, bankNames);
         login_bank_name.setAdapter(adapter);
 
         login_continue.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +100,7 @@ public class LoginActivity1 extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 //        Toast.makeText(this, "onPause", Toast.LENGTH_SHORT).show();
-        if (sharedPreferences.getBoolean(LOGGED, false) == false) {
+        if (!sharedPreferences.getBoolean(LOGGED, false)) {
             saveCredentialsOnPause(login_phone_no.getText().toString(), login_bank_name.getText().toString());
         }
     }
@@ -148,7 +152,7 @@ public class LoginActivity1 extends AppCompatActivity {
         super.onResume();
 //        Toast.makeText(this, "onResume", Toast.LENGTH_SHORT).show();
         sharedPreferences = getSharedPreferences(myPref, 0);
-        if (sharedPreferences.getBoolean(LOGGED, false) == false) {
+        if (!sharedPreferences.getBoolean(LOGGED, false)) {
             login_phone_no.setText(sharedPreferences.getString(PHONE_NO, "").toString());
             login_phone_no.setSelection(sharedPreferences.getString(PHONE_NO, "").length());
 

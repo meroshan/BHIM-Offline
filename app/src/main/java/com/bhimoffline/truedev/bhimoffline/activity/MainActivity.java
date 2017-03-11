@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(true)
+                .build();
+        Fabric.with(fabric);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -227,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void shareOnWhatsApp() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        String message = "Don't have Internet connection and still want to check your bank balance and transact money? Download BHiM Offline" +
+        String message = "Don't have Internet connection and still want to check your bank balance and send money? Download BHIM Offline" +
                 " app and experience offline banking on a click.\n https://play.google.com/store/apps/details?id=com.sohaari.bhimoffline";
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
         startActivity(shareIntent);
@@ -247,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             //Boolean temp = ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CALL_PHONE);
             showMessage();
-            return;
         }
     }
 
@@ -397,8 +401,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(this, AccessibilityNotEnabled.class));
 //                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY));
             }
-        } else {
-            return;
         }
         //} else {
         //    startActivity(new Intent(MainActivity.this, LoginActivity1.class));
