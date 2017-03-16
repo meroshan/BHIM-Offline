@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
+import com.bhimoffline.truedev.bhimoffline.utils.CheckBackgroundService;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +23,7 @@ import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivi
  */
 
 public class USSDAccessibilityService extends AccessibilityService {
-    String TAG = "tag";
+    String TAG = "service";
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -69,8 +71,7 @@ public class USSDAccessibilityService extends AccessibilityService {
         super.onServiceConnected();
         Log.d(TAG, "onServiceConnected");
 
-        //if (AccessibilityServiceBroadcast.isAccessibilityEnabled())
-        {
+        if (CheckBackgroundService.isAccessibilityEnabled()) {
             Intent intent = new Intent(this, MainActivity.class);
             //addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -78,13 +79,11 @@ public class USSDAccessibilityService extends AccessibilityService {
             try {
                 startActivity(intent);
                 Log.d(TAG, "opening main activity");
+                Toast.makeText(this, "service connected", Toast.LENGTH_SHORT).show();
             } catch (IllegalStateException e) {
             } catch (ActivityNotFoundException e2) {
             }
         }
-//        else{
-//            Toast.makeText(this, "disabled hai bc", Toast.LENGTH_SHORT).show();
-//        }
 
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
         info.flags = AccessibilityServiceInfo.DEFAULT;
@@ -113,7 +112,7 @@ public class USSDAccessibilityService extends AccessibilityService {
     public boolean onUnbind(Intent intent) {
 //        NotificationCompat.Builder mBuilder =
 //                new NotificationCompat.Builder(this)
-//                        .setSmallIcon(R.drawable.ic_call)
+//                        .setSmallIcon(R.drawable.ic_call_colored)
 //                        .setContentTitle("BHiM Offline is disabled")
 //                        .setContentText("Please turn it on!");
 //

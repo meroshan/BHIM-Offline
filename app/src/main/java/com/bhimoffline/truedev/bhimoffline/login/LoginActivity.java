@@ -25,13 +25,14 @@ import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.PHONE_NO
  * Created by rahul on 1/4/2017.
  */
 
-public class LoginActivity1 extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     public static final String myPref = "truedev.bhimoffline.app";
     public SharedPreferences.Editor editor;
     TextInputEditText login_phone_no;
     AutoCompleteTextView login_bank_name;
-    Button login_continue, playstore_bhim, playstore_phonepe;
+    Button login_continue;
+    //playstore_bhim, playstore_phonepe;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -45,13 +46,13 @@ public class LoginActivity1 extends AppCompatActivity {
             finish();
         }
 
-        setContentView(R.layout.activity_login1);
+        setContentView(R.layout.activity_login);
 
         login_phone_no = (TextInputEditText) findViewById(R.id.login_mobile_no);
         login_bank_name = (AutoCompleteTextView) findViewById(R.id.login_bank_name);
         login_continue = (Button) findViewById(R.id.login_continue);
-        playstore_bhim = (Button) findViewById(R.id.playstore_bhim);
-        playstore_phonepe = (Button) findViewById(R.id.playstore_phonepe);
+//        playstore_bhim = (Button) findViewById(R.id.playstore_bhim);
+//        playstore_phonepe = (Button) findViewById(R.id.playstore_phonepe);
 
         String bankNames[] = {"Abhyudaya Co-op Bank", "Allahabad Bank", "Andhra Bank", "Apna Sahakari Bank", "Axis Bank", "Bank of Baroda",
                 "Bank of India", "Bank of Maharashtra", "Bhartiya Mahila Bank", "Canara Bank", "Central Bank of India", "Corporation Bank",
@@ -62,7 +63,7 @@ public class LoginActivity1 extends AppCompatActivity {
                 "Sbi", "State Bank of India", "State Bank of Mysore", "State Bank of Patiala", "State Bank of Travancore", "Syndicate Bank", "Tamilnad Mercantile Bank",
                 "UCO Bank", "Union Bank of India", "United Bank of India", "Vijaya Bank", "Yes Bank"};
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, bankNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, bankNames);
         login_bank_name.setAdapter(adapter);
 
         login_continue.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +71,7 @@ public class LoginActivity1 extends AppCompatActivity {
             public void onClick(View v) {
                 if (login_phone_no.getText().toString().length() == 10 && (login_bank_name.getText().toString().length() > 0)) {
                     if (saveToSharedPreference(login_phone_no.getText().toString(), login_bank_name.getText().toString())) {
-                        startActivity(new Intent(LoginActivity1.this, MainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     }
                 }
@@ -136,7 +137,7 @@ public class LoginActivity1 extends AppCompatActivity {
         editor = sharedPreferences.edit();
         editor.putString("phone_no", phone_no);
         editor.putString("bank_name", bank_name);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

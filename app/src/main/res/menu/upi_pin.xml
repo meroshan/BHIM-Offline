@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/ic_restore"
+        android:title="@string/reset_upi_pin"
+        android:titleCondensed="@string/reset_upi_pin_condensed" />
+    <item
+        android:icon="@drawable/ic_key"
+        android:title="@string/change_upi_pin"
+        android:titleCondensed="@string/change_upi_pin_condensed" />
+</menu>

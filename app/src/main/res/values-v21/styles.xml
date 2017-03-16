@@ -6,4 +6,21 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
+
+    <style name="FlatButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:colorButtonNormal">@color/light_blue</item>
+    </style>
+
+    <style name="ServiceButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:colorButtonNormal">@color/light_blue</item>
+        <item name="android:padding">@dimen/button_padding_medium</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+    </style>
+
+    <style name="FlatButtonColored" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:colorButtonNormal">@color/light_blue</item>
+    </style>
 </resources>

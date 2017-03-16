@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/send_money"
+        android:icon="@drawable/ic_send"
+        android:title="@string/send_money"
+        android:titleCondensed="@string/send_money_condensed" />
+    <item
+        android:id="@+id/request_money"
+        android:icon="@drawable/ic_receive"
+        android:title="@string/request_money" />
+    <item
+        android:id="@+id/my_profile"
+        android:icon="@drawable/ic_identity"
+        android:title="@string/my_profile" />
+    <item
+        android:id="@+id/pending_requests"
+        android:icon="@drawable/ic_import_export"
+        android:title="@string/pending_requests" />
+    <item
+        android:icon="@drawable/ic_history"
+        android:title="@string/transactions" />
+    <item
+        android:id="@+id/upi_pin"
+        android:icon="@drawable/ic_pin"
+        android:title="@string/upi_pin" />
+</menu>

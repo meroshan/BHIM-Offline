@@ -25,6 +25,7 @@
             android:text="@string/go_to_setting"
             android:textColor="@android:color/white"
             android:textSize="20sp"
+            android:visibility="gone"
             app:backgroundTint="@color/colorBrandPrimaryAccent" />
 
         <Space
@@ -47,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="16dp"
+                android:padding="4dp"
                 android:text="@string/accessibility_label"
                 android:textColor="@android:color/black"
                 android:textSize="24sp" />
@@ -61,11 +62,30 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="280dp"
+            android:src="@drawable/untitle1d" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/go_to_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="@string/go_to_setting"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:backgroundTint="@color/colorBrandPrimaryAccent" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="24dp"
-            android:background="@color/horizonal_line_background" />
+            android:background="@color/horizontal_line_background"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="match_parent"
@@ -84,19 +104,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="24dp"
-            android:background="@color/horizonal_line_background"
+            android:background="@color/horizontal_line_background"
             android:visibility="gone" />
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/go_to_setting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="20dp"
-            android:text="@string/go_to_setting"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            app:backgroundTint="@color/colorBrandPrimaryAccent" />
 
         <TextView
             android:layout_width="match_parent"

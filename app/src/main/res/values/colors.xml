@@ -9,7 +9,10 @@
     <color name="colorBrandPrimaryAccent">#FF629F1D</color>
     <color name="colorButtonBrandFillPressed">@color/colorPrimaryDark</color>
     <color name="colorButtonBrandFill">@color/colorBrandPrimary</color>
-    <color name="colorBrandPrimary">#FF629F1D</color>
+    <color name="colorBrandPrimary">#4075ff</color>
     <color name="colorPrimaryTextDark">#323232</color>
-    <color name="horizonal_line_background">#22000000</color>
+    <color name="horizontal_line_background">#22000000</color>
+    <color name="buttonSlideUp">#ffffff</color>
+    <color name="light_text">#aaaaaa</color>
+    <color name="light_blue">#2196f3</color>
 </resources>

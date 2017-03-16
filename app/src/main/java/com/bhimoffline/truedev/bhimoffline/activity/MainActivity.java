@@ -29,21 +29,20 @@ import android.widget.Toast;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bhimoffline.truedev.bhimoffline.R;
-import com.bhimoffline.truedev.bhimoffline.service.AccessibilityNotEnabled;
+import com.bhimoffline.truedev.bhimoffline.service.BackgroundService;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.flipboard.bottomsheet.commons.MenuSheetView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
-
-//<color name="colorPrimary">#629f1d</color>
+import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity.myPref;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
     public final static String LOGGED = "isLoggedIn";
     public final static String PHONE_NO = "phone_no";
     public final static String BANK_NAME = "bank_name";
@@ -60,11 +59,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView bank_logo;
     ImageView share_whatsApp;
     ImageView rate_play_store;
-
     String TAG = "tag";
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {Manifest.permission.CALL_PHONE};
+    //    private SlideUp slideUp;
+//    private View dim;
+//    private View sliderView;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private BottomSheetLayout bottomSheet;
 
     public static boolean hasPermissions(Context context, String... permissions) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
@@ -93,6 +95,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         activityVisible = false;
     }
 
+    public void showMenuSheet(int id, String title) {
+        MenuSheetView menuSheetView =
+                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, title, new MenuSheetView.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        //Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
+                        if (bottomSheet.isSheetShowing()) {
+                            bottomSheet.dismissSheet();
+                        }
+                        if (item.getItemId() == R.id.send_money) {
+                            showMenuSheet(R.menu.send_money, "Send to");
+                        } else if (item.getItemId() == R.id.my_profile) {
+                            showMenuSheet(R.menu.my_profile, "My account");
+                        } else if (item.getItemId() == R.id.upi_pin) {
+                            showMenuSheet(R.menu.upi_pin, "UPI PIN");
+                        }
+                        return true;
+                    }
+                });
+        menuSheetView.inflateMenu(id);
+        bottomSheet.showWithSheetView(menuSheetView);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final Fabric fabric = new Fabric.Builder(this)
@@ -102,8 +127,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fabric.with(fabric);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+        bottomSheet.setPeekOnDismiss(true);
+
+//        sliderView = findViewById(R.id.slideView);
+//        dim = findViewById(R.id.dim);
+//
+//        slideUp = new SlideUp.Builder(sliderView)
+//                .withListeners(new SlideUp.Listener() {
+//                    @Override
+//                    public void onSlide(float percent) {
+//                        dim.setAlpha(1 - (percent / 100));
+//                    }
+//
+//                    @Override
+//                    public void onVisibilityChanged(int visibility) {
+//                        if (visibility == View.GONE) {
+//                            //fab.show();
+//                        }
+//                    }
+//                })
+//                .withStartGravity(Gravity.END)
+//                .withLoggingEnabled(true)
+//                .withGesturesEnabled(true)
+//                .withStartState(SlideUp.State.HIDDEN)
+//                .build();
 
         Fabric.with(this, new Answers(), new Crashlytics());
         Answers.getInstance().logCustom(new CustomEvent("App opened"));
@@ -112,15 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
 
         sharedPreferences = getSharedPreferences(myPref, 0);
-//        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
-//            if (!isAccessibilitySettingsOn(getApplicationContext())) {
-//
-//                startActivity(new Intent(this, AccessibilityNotEnabled.class));
-////                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME));
-//            }
-//        } else {
-//            startActivity(new Intent(MainActivity.this, LoginActivity1.class));
-//        }
 
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, sharedPreferences.getString("phone_no", "Phone no not set"));
@@ -157,6 +200,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+
+        //starting background service
+        startService(new Intent(this, BackgroundService.class));
 
         /*
         final CardView cardView = (CardView) findViewById(R.id.swipable);
@@ -205,14 +251,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.update_balance:
                 askForPermission();
-                makeCall("*99*3");
+                //makeCall("*123");
                 break;
             case R.id.other_services:
                 askForPermission();
-                makeCall("*99");
+                showMenuSheet(R.menu.other_services, "Services");
                 break;
             case R.id.share_whatsApp:
-                //Toast.makeText(instance, "Saare friends ko share karo BC", Toast.LENGTH_SHORT).show();
                 shareOnWhatsApp();
                 break;
             case R.id.rate_play_store:
@@ -237,16 +282,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
         startActivity(shareIntent);
     }
-
-//    private boolean isMyServiceRunning(Class<?> serviceClass) {
-//        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-//            if (serviceClass.getName().equals(service.service.getClassName())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
     private void askForPermission() {
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -333,12 +368,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         //Toast.makeText(instance, "MainActivity onBackPressed", Toast.LENGTH_SHORT).show();
-        super.onBackPressed();
+        //super.onBackPressed();
+        moveTaskToBack(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -378,17 +413,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        MainActivity.activityStopped();
     }
 
     @Override
     protected void onDestroy() {
+        MainActivity.activityStopped();
+        stopService(new Intent(this, BackgroundService.class));
         super.onDestroy();
     }
 
     protected void onResume() {
         super.onResume();
         MainActivity.activityResumed();
+        startService(new Intent(this, BackgroundService.class));
 
         Log.d(TAG, "Main activity onResume called");
         sharedPreferences = getSharedPreferences(myPref, 0);
@@ -403,7 +440,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         //} else {
-        //    startActivity(new Intent(MainActivity.this, LoginActivity1.class));
+        //    startActivity(new Intent(MainActivity.this, LoginActivity.class));
         //}
     }
+
+//    private boolean isMyServiceRunning(Class<?> serviceClass) {
+//        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+//        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+//            if (serviceClass.getName().equals(service.service.getClassName())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+//    public void showDialog() {
+//        android.app.FragmentManager manager = getFragmentManager();
+//        OtherServicesActivity dialog = new OtherServicesActivity();
+//        dialog.show(manager, "dialog");
+//    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

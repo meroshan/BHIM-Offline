@@ -1,4 +1,4 @@
-package com.bhimoffline.truedev.bhimoffline.service;
+package com.bhimoffline.truedev.bhimoffline.activity;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;

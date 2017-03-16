@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity1.myPref;
+import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity.myPref;
 
 /**
  * Created by rahul on 1/2/2017.
@@ -30,7 +30,7 @@ public class UUSDBroadcastReceiver extends BroadcastReceiver {
         //Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
         String words[] = message.toLowerCase().split("\\s");
         String balance = "Unable to fetch balance";
-        ArrayList<String> keywords = new ArrayList<String>(Arrays.asList(words));
+        ArrayList<String> keywords = new ArrayList<>(Arrays.asList(words));
         if (keywords.contains("your") && keywords.contains("balance") && (keywords.contains("rs") || keywords.contains("rs."))) {
             int pos = 0;
             if (keywords.contains("rs")) {
@@ -66,12 +66,12 @@ public class UUSDBroadcastReceiver extends BroadcastReceiver {
         balance_user_detail_card.setText(balance);
 
         TextView balance_card_last_updated = (TextView) MainActivity.getInstance().findViewById(R.id.balance_card_last_updated);
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        String date = new SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault()).format(new Date());
         balance_card_last_updated.setText(date);
 
         sharedPreferences = MainActivity.getInstance().getSharedPreferences(myPref, 0);
-        sharedPreferences.edit().putString("balance", balance).commit();
-        sharedPreferences.edit().putString("last_updated", date).commit();
+        sharedPreferences.edit().putString("balance", balance).apply();
+        sharedPreferences.edit().putString("last_updated", date).apply();
 
         //Toast.makeText(MainActivity.getInstance(), "message :" + balance, Toast.LENGTH_SHORT).show();
     }
