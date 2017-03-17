@@ -16,7 +16,14 @@
         android:layout_height="4dp"
         android:visibility="visible" />
 
-    <include layout="@layout/balance_card" />
+    <fragment
+        android:id="@+id/fragment"
+        android:name="com.bhimoffline.truedev.bhimoffline.activity.BalanceCardFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/card_default_margin" />
+
+    <!--<include layout="@layout/balance_card" />-->
 
     <include layout="@layout/notice1" />
 

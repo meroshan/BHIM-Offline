@@ -1,18 +1,14 @@
 package com.bhimoffline.truedev.bhimoffline.activity;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,42 +37,24 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity.myPref;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, BalanceCardFragment.BottomSheetListener {
     public final static String LOGGED = "isLoggedIn";
     public final static String PHONE_NO = "phone_no";
     public final static String BANK_NAME = "bank_name";
     public final static String BALANCE = "balance";
     private static boolean activityVisible;
     private static MainActivity instance;
-    Button update_balance, other_services, get_started_install;
+    //Button update_balance, other_services, get_started_install;
     SharedPreferences sharedPreferences;
     TextView user_detail_card_bank_name;
     TextView user_detail_card_upi_address;
     TextView user_detail_card_balance;
-    TextView balance_card_balance;
-    TextView balance_card_last_updated;
     ImageView bank_logo;
     ImageView share_whatsApp;
     ImageView rate_play_store;
     String TAG = "tag";
-    int PERMISSION_ALL = 1;
-    String[] PERMISSIONS = {Manifest.permission.CALL_PHONE};
-    //    private SlideUp slideUp;
-//    private View dim;
-//    private View sliderView;
     private FirebaseAnalytics mFirebaseAnalytics;
     private BottomSheetLayout bottomSheet;
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public static MainActivity getInstance() {
         return instance;
@@ -134,29 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
         bottomSheet.setPeekOnDismiss(true);
 
-//        sliderView = findViewById(R.id.slideView);
-//        dim = findViewById(R.id.dim);
-//
-//        slideUp = new SlideUp.Builder(sliderView)
-//                .withListeners(new SlideUp.Listener() {
-//                    @Override
-//                    public void onSlide(float percent) {
-//                        dim.setAlpha(1 - (percent / 100));
-//                    }
-//
-//                    @Override
-//                    public void onVisibilityChanged(int visibility) {
-//                        if (visibility == View.GONE) {
-//                            //fab.show();
-//                        }
-//                    }
-//                })
-//                .withStartGravity(Gravity.END)
-//                .withLoggingEnabled(true)
-//                .withGesturesEnabled(true)
-//                .withStartState(SlideUp.State.HIDDEN)
-//                .build();
-
         Fabric.with(this, new Answers(), new Crashlytics());
         Answers.getInstance().logCustom(new CustomEvent("App opened"));
 
@@ -165,30 +119,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         sharedPreferences = getSharedPreferences(myPref, 0);
 
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, sharedPreferences.getString("phone_no", "Phone no not set"));
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, sharedPreferences.getString("bank_name", "No bank set"));
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, sharedPreferences.getString("phone_no", "Phone no not set"));
+//        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, sharedPreferences.getString("bank_name", "No bank set"));
+//        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         user_detail_card_bank_name = (TextView) findViewById(R.id.user_detail_card_bank_name);
         user_detail_card_upi_address = (TextView) findViewById(R.id.user_detail_card_upi_address);
         user_detail_card_balance = (TextView) findViewById(R.id.user_detail_card_balance);
-        balance_card_balance = (TextView) findViewById(R.id.balance_card_balance);
-        balance_card_last_updated = (TextView) findViewById(R.id.balance_card_last_updated);
         bank_logo = (ImageView) findViewById(R.id.bank_logo);
         share_whatsApp = (ImageView) findViewById(R.id.share_whatsApp);
         rate_play_store = (ImageView) findViewById(R.id.rate_play_store);
-        get_started_install = (Button) findViewById(R.id.get_started_install);
+        //get_started_install = (Button) findViewById(R.id.get_started_install);
 
         instance = this;
 
-        update_balance = (Button) findViewById(R.id.update_balance);
-        update_balance.setOnClickListener(this);
-        other_services = (Button) findViewById(R.id.other_services);
-        other_services.setOnClickListener(this);
         share_whatsApp.setOnClickListener(this);
         rate_play_store.setOnClickListener(this);
-        get_started_install.setOnClickListener(this);
+        //get_started_install.setOnClickListener(this);
     }
 
     @Override
@@ -204,26 +152,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //starting background service
         startService(new Intent(this, BackgroundService.class));
 
-        /*
-        final CardView cardView = (CardView) findViewById(R.id.swipable);
-        cardView.setOnTouchListener(new SwipeDismissTouchListener(cardView, null,
-                new SwipeDismissTouchListener.DismissCallbacks() {
-
-                    @Override
-                    public boolean canDismiss(Object token) {
-                        return true;
-                    }
-
-                    @Override
-                    public void onDismiss(View view, Object token) {
-                        //Toast.makeText(MainActivity.this, "dismissing", Toast.LENGTH_SHORT).show();
-                        ((ViewGroup) cardView.getParent()).removeView(cardView);
-                    }
-                }));
-        */
-
         String bank_name = sharedPreferences.getString("bank_name", "Bank Name");
         String mobile_no = sharedPreferences.getString("phone_no", "Mobile no");
+
         String balance = sharedPreferences.getString(BALANCE, "Balance");
 
         user_detail_card_bank_name.setText(bank_name);
@@ -242,21 +173,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextDrawable textDrawable = TextDrawable.builder().buildRound(String.valueOf(bankInitial), color);
         bank_logo.setImageDrawable(textDrawable);
         user_detail_card_balance.setText(balance);
-        balance_card_balance.setText(balance);
-        balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.update_balance:
-                askForPermission();
-                //makeCall("*123");
-                break;
-            case R.id.other_services:
-                askForPermission();
-                showMenuSheet(R.menu.other_services, "Services");
-                break;
             case R.id.share_whatsApp:
                 shareOnWhatsApp();
                 break;
@@ -281,33 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 " app and experience offline banking on a click.\n https://play.google.com/store/apps/details?id=com.sohaari.bhimoffline";
         shareIntent.putExtra(Intent.EXTRA_TEXT, message);
         startActivity(shareIntent);
-    }
-
-    private void askForPermission() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            //Boolean temp = ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CALL_PHONE);
-            showMessage();
-        }
-    }
-
-    private void showMessage() {
-        AlertDialog.Builder alertDialoge = new AlertDialog.Builder(MainActivity.this);
-        alertDialoge.setTitle("Permission Required")
-                .setCancelable(false)
-                .setMessage("BHiM Offline doesn't work without phone permission.\nWe just need to make a call to fetch your balance. So please allow this permission.")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS, PERMISSION_ALL);
-                    }
-                })
-                .setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-        alertDialoge.show();
     }
 
     private boolean isAccessibilitySettingsOn(Context mContext) {
@@ -391,15 +285,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sharedPreferences = getSharedPreferences(myPref, 0);
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                     "mailto", "sohaariapps@gmail.com", null));
-            //intent.setType("message/rfc822");
-            //intent.putExtra(Intent.EXTRA_EMAIL, "sohaariapps@gmail.com");
             intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback from " + sharedPreferences.getString(PHONE_NO, "0123456789").toString());
             intent.putExtra(Intent.EXTRA_TEXT, "My feedback\n");
 
             startActivity(Intent.createChooser(intent, "Send Email"));
-            //return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -427,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainActivity.activityResumed();
         startService(new Intent(this, BackgroundService.class));
 
-        Log.d(TAG, "Main activity onResume called");
         sharedPreferences = getSharedPreferences(myPref, 0);
         //Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
 

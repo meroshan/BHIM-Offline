@@ -156,7 +156,7 @@
     <string name="reset_upi_pin_condensed">Reset PIN</string>
     <string name="change_upi_pin">Change UPI PIN</string>
     <string name="loved_the_app">Loved the app?</string>
-    <string name="last_updated">last updated :</string>
+    <string name="last_updated">last updated : </string>
     <string name="never">never</string>
     <string name="balance">Balance</string>
     <string name="enter_details_to_continue">Enter details to continue</string>
