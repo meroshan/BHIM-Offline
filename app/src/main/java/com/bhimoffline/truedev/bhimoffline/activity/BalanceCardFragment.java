@@ -36,6 +36,7 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
+
             mbottomSheetListener = (BottomSheetListener) context;
         } catch (ClassCastException e) {
             // TODO: 18-Mar-17 report to fabric
