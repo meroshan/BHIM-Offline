@@ -1,15 +1,14 @@
 package com.bhimoffline.truedev.bhimoffline.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.PersistableBundle;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -42,9 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public final static String PHONE_NO = "phone_no";
     public final static String BANK_NAME = "bank_name";
     public final static String BALANCE = "balance";
+    public static Handler handler;
     private static boolean activityVisible;
-    private static MainActivity instance;
-    //Button update_balance, other_services, get_started_install;
     SharedPreferences sharedPreferences;
     TextView user_detail_card_bank_name;
     TextView user_detail_card_upi_address;
@@ -53,12 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView share_whatsApp;
     ImageView rate_play_store;
     String TAG = "tag";
+    int flag = 0;
     private FirebaseAnalytics mFirebaseAnalytics;
     private BottomSheetLayout bottomSheet;
-
-    public static MainActivity getInstance() {
-        return instance;
-    }
 
     public static boolean isActivityVisible() {
         return activityVisible;
@@ -72,12 +67,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         activityVisible = false;
     }
 
-    public void showMenuSheet(int id, String title) {
+    public void updateBalance(String balance) {
+        if (user_detail_card_balance != null) {
+            user_detail_card_balance.setText(balance);
+        }
+    }
+
+    public void showMenuSheet(final int id, String title) {
+        flag = 0;
+        new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
+
         MenuSheetView menuSheetView =
                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, title, new MenuSheetView.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        //Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_SHORT).show();
                         if (bottomSheet.isSheetShowing()) {
                             bottomSheet.dismissSheet();
                         }
@@ -87,12 +90,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             showMenuSheet(R.menu.my_profile, "My account");
                         } else if (item.getItemId() == R.id.upi_pin) {
                             showMenuSheet(R.menu.upi_pin, "UPI PIN");
+                        } else if (item.getItemId() == R.id.send_to_mobile_no) {
+                            flag = 1;
+                            Toast.makeText(MainActivity.this, "flag=1", Toast.LENGTH_SHORT).show();
+                            sendtomobile();
                         }
                         return true;
                     }
                 });
-        menuSheetView.inflateMenu(id);
-        bottomSheet.showWithSheetView(menuSheetView);
+        if (flag == 0) {
+            Toast.makeText(this, "flag=0", Toast.LENGTH_SHORT).show();
+            menuSheetView.inflateMenu(id);
+            //   bottomSheet.showWithSheetView(menuSheetView);
+        }
+        // new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
+    }
+
+    public void sendtomobile() {
+        new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
     }
 
     @Override
@@ -104,6 +119,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fabric.with(fabric);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar_main);
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                TextView balance = (TextView) findViewById(R.id.balance_card_balance);
+            }
+        };
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -132,8 +154,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rate_play_store = (ImageView) findViewById(R.id.rate_play_store);
         //get_started_install = (Button) findViewById(R.id.get_started_install);
 
-        instance = this;
-
         share_whatsApp.setOnClickListener(this);
         rate_play_store.setOnClickListener(this);
         //get_started_install.setOnClickListener(this);
@@ -141,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        Toast.makeText(instance, "saving state", Toast.LENGTH_SHORT).show();
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
@@ -158,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String balance = sharedPreferences.getString(BALANCE, "Balance");
 
         user_detail_card_bank_name.setText(bank_name);
-        user_detail_card_upi_address.setText(mobile_no + "@upi");
+        user_detail_card_upi_address.setText(mobile_no + getString(R.string.upi_address_postfix));
 
         ColorGenerator colorGenerator = ColorGenerator.MATERIAL;
         int color = colorGenerator.getRandomColor();
@@ -172,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         TextDrawable textDrawable = TextDrawable.builder().buildRound(String.valueOf(bankInitial), color);
         bank_logo.setImageDrawable(textDrawable);
-        user_detail_card_balance.setText(balance);
+        user_detail_card_balance.setText("Rs " + balance);
     }
 
     @Override
@@ -241,28 +260,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    public void makeCall(final String ussdCode) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Intent fetchBalanceIntent = new Intent(Intent.ACTION_CALL);
-                //fetchBalanceIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                fetchBalanceIntent.setData(Uri.parse("tel:" + ussdCode + Uri.encode("#")));
-                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-
-                //To Do - for the first time after getting permission, fetchBalanceIntent is not starting. Fix this.
-                startActivity(fetchBalanceIntent);
-
-            }
-        }).start();
-    }
+//    public void makeCall(final String ussdCode) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent fetchBalanceIntent = new Intent(Intent.ACTION_CALL);
+//                //fetchBalanceIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//                fetchBalanceIntent.setData(Uri.parse("tel:" + ussdCode + Uri.encode("#")));
+//                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                    return;
+//                }
+//
+//                //To Do - for the first time after getting permission, fetchBalanceIntent is not starting. Fix this.
+//                startActivity(fetchBalanceIntent);
+//
+//            }
+//        }).start();
+//    }
 
     @Override
     public void onBackPressed() {
-        //Toast.makeText(instance, "MainActivity onBackPressed", Toast.LENGTH_SHORT).show();
-        //super.onBackPressed();
         moveTaskToBack(true);
     }
 
@@ -296,8 +313,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        //MainActivity.activityPaused();
-        //Toast.makeText(instance, "onPause", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -318,19 +333,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startService(new Intent(this, BackgroundService.class));
 
         sharedPreferences = getSharedPreferences(myPref, 0);
-        //Toast.makeText(MainActivity.this, "onResume", Toast.LENGTH_SHORT).show();
-
-        // No need to check for if used is logged in or not as MainActivity is started only if used is logged in
-        //if (sharedPreferences.getBoolean("isLoggedIn", false) == true) {
         if (!isAccessibilitySettingsOn(getApplicationContext())) {
             {
                 startActivity(new Intent(this, AccessibilityNotEnabled.class));
-//                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY));
             }
         }
-        //} else {
-        //    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        //}
     }
 
 //    private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -349,18 +356,3 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        dialog.show(manager, "dialog");
 //    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

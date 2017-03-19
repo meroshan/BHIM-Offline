@@ -49,14 +49,6 @@
 
         <service android:name=".service.BackgroundService" />
 
-        <receiver
-            android:name=".receiver.UUSDBroadcastReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="truedev.bankbalance.USSD" />
-            </intent-filter>
-        </receiver>
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="d2d75b485b1fdb7ee06cc72b231c80681532b2c2" />

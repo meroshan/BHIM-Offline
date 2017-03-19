@@ -8,13 +8,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.Toast;
 
+import com.bhimoffline.truedev.bhimoffline.activity.BalanceCardFragment;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
 import com.bhimoffline.truedev.bhimoffline.utils.CheckBackgroundService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivityVisible;
 
@@ -23,11 +27,11 @@ import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivi
  */
 
 public class USSDAccessibilityService extends AccessibilityService {
-    String TAG = "service";
+    String TAG = "AccessibilityService";
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.d(TAG, "onAccessibilityEvent");
+        Log.d("onAccessibilityEvent", "onAccessibilityEvent");
 
         AccessibilityNodeInfo source = event.getSource();
         //if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !event.getClassName().equals("android.app.AlertDialog"))
@@ -43,27 +47,41 @@ public class USSDAccessibilityService extends AccessibilityService {
         }
 
         List<CharSequence> eventText;
-
         if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             eventText = event.getText();
         } else {
             eventText = Collections.singletonList(source.getText());
         }
 
-        String text = processUSSDText(eventText);
+        String text = eventText.toString();
+        Log.d("onAccessibilityEvent", text);
 
         if (TextUtils.isEmpty(text)) return;
 
         if (isActivityVisible()) {
+            Log.d(TAG, "activity is visible");
             performGlobalAction(GLOBAL_ACTION_BACK); // This works on 4.1+ only
-        } else {
-            // To DO //////////////////////////////////////////////////////////////////////////////////////////////
         }
 
-        Intent intent = new Intent();
-        intent.setAction("truedev.bankbalance.USSD");
-        intent.putExtra("message", text);
-        sendBroadcast(intent);
+        parseBalance(eventText.toString());
+    }
+
+    private void parseBalance(String message) {
+        String words[] = message.toLowerCase().split("\\s*[:,.\\s*]\\s*");
+        ArrayList<String> keywords = new ArrayList<>(Arrays.asList(words));
+
+        int pos;
+        String balance = "Unable to fetch balance";
+        if (keywords.contains("rs")) {
+            pos = keywords.indexOf("rs");
+            if (pos + 1 < keywords.size() && keywords.get(pos + 1).matches("\\d+")) {
+                balance = keywords.get(pos + 1);
+            } else if (pos - 1 > 0 && keywords.get(pos - 1).matches("\\d+")) {
+                balance = keywords.get(pos - 1);
+            }
+        }
+        EventBus.getDefault().post(new BalanceCardFragment.MessageEvent(balance));
+        //Toast.makeText(this, "balance is + " + balance, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -71,15 +89,15 @@ public class USSDAccessibilityService extends AccessibilityService {
         super.onServiceConnected();
         Log.d(TAG, "onServiceConnected");
 
-        if (CheckBackgroundService.isAccessibilityEnabled()) {
+        if (CheckBackgroundService.isAccessibilityEnabled(getApplicationContext())) {
             Intent intent = new Intent(this, MainActivity.class);
             //addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             try {
                 startActivity(intent);
-                Log.d(TAG, "opening main activity");
-                Toast.makeText(this, "service connected", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Service connected");
+                //Toast.makeText(this, "service connected", Toast.LENGTH_SHORT).show();
             } catch (IllegalStateException e) {
             } catch (ActivityNotFoundException e2) {
             }
@@ -105,7 +123,6 @@ public class USSDAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-
     }
 
     @Override
@@ -125,6 +142,10 @@ public class USSDAccessibilityService extends AccessibilityService {
         //Toast.makeText(this, "disabled", Toast.LENGTH_SHORT).show();
         return super.onUnbind(intent);
     }
+
+//    public interface UpdateBalanceListener {
+//        void updateBalance(String balance);
+//    }
 
     // called when user just enables the accessibility service
 //    public boolean isAccessibilityEnabled() {

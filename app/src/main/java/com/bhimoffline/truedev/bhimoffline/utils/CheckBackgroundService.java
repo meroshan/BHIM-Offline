@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.util.Log;
 
-import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
 import com.bhimoffline.truedev.bhimoffline.service.BackgroundService;
 
 /**
@@ -13,11 +12,11 @@ import com.bhimoffline.truedev.bhimoffline.service.BackgroundService;
 
 public class CheckBackgroundService {
 
-    public static boolean isAccessibilityEnabled() {
+    public static boolean isAccessibilityEnabled(Context context) {
         try {
             String canonicalName = BackgroundService.class.getCanonicalName();
             Log.d("service1", "canonical name = " + canonicalName);
-            for (ActivityManager.RunningServiceInfo runningServiceInfo : ((ActivityManager) MainActivity.getInstance().getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE)) {
+            for (ActivityManager.RunningServiceInfo runningServiceInfo : ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(Integer.MAX_VALUE)) {
                 Log.d("service2", runningServiceInfo.service.getClassName().toString() + " " + canonicalName.equalsIgnoreCase(runningServiceInfo.service.getClassName()));
                 if (canonicalName.equalsIgnoreCase(runningServiceInfo.service.getClassName())) {
                     Log.d("TAG", "BackgroundService is running");

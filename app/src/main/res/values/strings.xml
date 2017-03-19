@@ -166,4 +166,6 @@
     <string name="don_t_have_upi_address">Don\'t have an upi address?</string>
     <string name="download_guide">First register your mobile on UPI by downloading PhonePe or BHIM app</string>
     <string name="transactions">Transactions</string>
+    <string name="upi_address_postfix">\@upi</string>
+    <string name="balance_prefix">Rs</string>
 </resources>
