@@ -1,1 +1,1 @@
-include ':app', ':SlideUp-Android-master'
+include ':app', ':bottomdialogs'

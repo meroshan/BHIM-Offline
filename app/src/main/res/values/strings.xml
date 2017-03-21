@@ -152,7 +152,7 @@
     <string name="ifsc_account_no">IFSC, Account no.</string>
     <string name="mmid_mobile_no">MMID, Mobile no.</string>
     <string name="change_upi_pin_condensed">Change PIN</string>
-    <string name="reset_upi_pin">Reset/Forgot UPI PIN</string>
+    <string name="reset_upi_pin">Reset/Forget UPI PIN</string>
     <string name="reset_upi_pin_condensed">Reset PIN</string>
     <string name="change_upi_pin">Change UPI PIN</string>
     <string name="loved_the_app">Loved the app?</string>

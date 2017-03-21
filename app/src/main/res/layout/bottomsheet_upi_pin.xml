@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/light_blue"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:text="UPI PIN"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#b0b0b0"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp">
+
+        <Button
+            android:id="@+id/reset_pin"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_restore"
+            android:text="@string/reset_upi_pin" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/change_pin"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_key"
+            android:text="@string/change_upi_pin" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Don't share your pin with anybody" />
+    </LinearLayout>
+</LinearLayout>

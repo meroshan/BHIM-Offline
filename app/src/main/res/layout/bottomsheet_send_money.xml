@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/light_blue"
+        android:gravity="center"
+        android:text="Send Money to"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp">
+
+        <Button
+            android:id="@+id/send_to_mobile_no"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_phone"
+            android:text="@string/mobile_number" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/send_to_aadhar"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_fingerprint"
+            android:text="@string/aadhar_number" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/send_to_payment_address"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_home"
+            android:text="@string/payment_address" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/send_to_saved_beneficiary"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_people"
+            android:text="@string/saved_beneficiary" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/send_to_ifsc"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_bank"
+            android:text="@string/ifsc_account_no" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/send_to_mmid"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_account"
+            android:text="@string/mmid_mobile_no" />
+    </LinearLayout>
+</LinearLayout>

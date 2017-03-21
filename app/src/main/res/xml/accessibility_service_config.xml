@@ -6,5 +6,5 @@
     android:canRetrieveWindowContent="true"
     android:description="@string/description"
     android:notificationTimeout="0"
-    android:packageNames="com.times.ussd"
+    android:packageNames="com.android.phone"
     android:settingsActivity="com.example.android.accessibility.ServiceSettingsActivity" />

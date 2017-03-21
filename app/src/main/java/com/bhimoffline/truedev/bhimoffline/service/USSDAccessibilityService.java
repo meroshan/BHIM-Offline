@@ -27,11 +27,12 @@ import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivi
  */
 
 public class USSDAccessibilityService extends AccessibilityService {
-    String TAG = "AccessibilityService";
+    //String TAG = "AccessibilityService";
+    String Tag = "bhimService";
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.d("onAccessibilityEvent", "onAccessibilityEvent");
+        Log.d(Tag, "onAccessibilityEvent called");
 
         AccessibilityNodeInfo source = event.getSource();
         //if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && !event.getClassName().equals("android.app.AlertDialog"))
@@ -59,14 +60,19 @@ public class USSDAccessibilityService extends AccessibilityService {
         if (TextUtils.isEmpty(text)) return;
 
         if (isActivityVisible()) {
-            Log.d(TAG, "activity is visible");
+            Log.d(Tag, "activity is visible");
             performGlobalAction(GLOBAL_ACTION_BACK); // This works on 4.1+ only
         }
 
-        parseBalance(eventText.toString());
+        parseMobileBalance(eventText.toString());
     }
 
-    private void parseBalance(String message) {
+    private void parsebankBalance(String message) {
+        String tokens[] = message.split("\\s");
+
+    }
+
+    private void parseMobileBalance(String message) {
         String words[] = message.toLowerCase().split("\\s*[:,.\\s*]\\s*");
         ArrayList<String> keywords = new ArrayList<>(Arrays.asList(words));
 
@@ -84,10 +90,14 @@ public class USSDAccessibilityService extends AccessibilityService {
         //Toast.makeText(this, "balance is + " + balance, Toast.LENGTH_SHORT).show();
     }
 
+    private void formatBalance(String balance) {
+
+    }
+
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        Log.d(TAG, "onServiceConnected");
+        Log.d(Tag, "USSDAccessibilityService connected");
 
         if (CheckBackgroundService.isAccessibilityEnabled(getApplicationContext())) {
             Intent intent = new Intent(this, MainActivity.class);
@@ -96,7 +106,7 @@ public class USSDAccessibilityService extends AccessibilityService {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             try {
                 startActivity(intent);
-                Log.d(TAG, "Service connected");
+                Log.d(Tag, "Service connected");
                 //Toast.makeText(this, "service connected", Toast.LENGTH_SHORT).show();
             } catch (IllegalStateException e) {
             } catch (ActivityNotFoundException e2) {
@@ -127,6 +137,7 @@ public class USSDAccessibilityService extends AccessibilityService {
 
     @Override
     public boolean onUnbind(Intent intent) {
+        Log.d(Tag, "USSDAccessibilityService disconnected");
 //        NotificationCompat.Builder mBuilder =
 //                new NotificationCompat.Builder(this)
 //                        .setSmallIcon(R.drawable.ic_call_colored)

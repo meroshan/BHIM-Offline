@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView bank_logo;
     ImageView share_whatsApp;
     ImageView rate_play_store;
+    EditText editText;
     String TAG = "tag";
     int flag = 0;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void updateBalance(String balance) {
         if (user_detail_card_balance != null) {
-            user_detail_card_balance.setText(balance);
+            user_detail_card_balance.setText("Rs " + balance);
         }
     }
 
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         } else if (item.getItemId() == R.id.send_to_mobile_no) {
                             flag = 1;
                             Toast.makeText(MainActivity.this, "flag=1", Toast.LENGTH_SHORT).show();
-                            sendtomobile();
+                            //sendtomobile();
                         }
                         return true;
                     }
@@ -101,13 +102,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (flag == 0) {
             Toast.makeText(this, "flag=0", Toast.LENGTH_SHORT).show();
             menuSheetView.inflateMenu(id);
-            //   bottomSheet.showWithSheetView(menuSheetView);
+            bottomSheet.showWithSheetView(menuSheetView);
         }
         // new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
     }
 
     public void sendtomobile() {
-        new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
+        //new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
     }
 
     @Override
@@ -119,13 +120,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Fabric.with(fabric);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar_main);
-
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                TextView balance = (TextView) findViewById(R.id.balance_card_balance);
-            }
-        };
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -205,6 +199,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 bhimOffline.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.sohaari.bhimoffline"));
                 startActivity(bhimOffline);
                 break;
+//            case R.id.editText:
+//                Toast.makeText(this, "edittext", Toast.LENGTH_SHORT).show();
+//                editText.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        InputMethodManager imm =
+//                                (InputMethodManager) getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.showSoftInput(editText, 0);
+//                    }
+//                });
+//                break;
 //            case R.id.get_started_install:
 //                Toast.makeText(instance, "Opening Play Store", Toast.LENGTH_SHORT).show();
 //                Intent phonePe = new Intent(Intent.ACTION_VIEW);

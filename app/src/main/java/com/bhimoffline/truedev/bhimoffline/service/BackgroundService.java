@@ -4,12 +4,15 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by rahul on 16-Mar-17.
  */
 
 public class BackgroundService extends Service {
+    String Tag = "bhimService";
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -18,13 +21,13 @@ public class BackgroundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //Toast.makeText(this, "Background service started", Toast.LENGTH_SHORT).show();
+        Log.d(Tag, "BackgroundService started");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        //Toast.makeText(this, "Background service destroyed", Toast.LENGTH_SHORT).show();
+        Log.d(Tag, "BackgroundService stopped");
         super.onDestroy();
     }
 }

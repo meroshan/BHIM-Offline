@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:background="@color/light_blue"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:text="Services"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#b0b0b0"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp">
+
+        <Button
+            android:id="@+id/send_money"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_send"
+            android:text="@string/send_money" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/request_money"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_receive"
+            android:text="@string/request_money" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f1f1f1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/my_profile"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_account"
+            android:text="@string/my_profile" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+
+        <Button
+            android:id="@+id/pending_requests"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_import_export"
+            android:text="@string/pending_requests" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/transactions"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_history"
+            android:text="@string/transactions" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="12dp"
+            android:background="#f1f1f1" />
+
+        <Button
+            android:id="@+id/upi_pin"
+            style="@style/BottomSheetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_pin"
+            android:text="@string/upi_pin" />
+    </LinearLayout>
+</LinearLayout>
