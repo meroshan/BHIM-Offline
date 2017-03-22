@@ -42,16 +42,12 @@
             android:background="#f1f1f1" />
 
         <Button
+            android:id="@+id/my_details"
             style="@style/BottomSheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_list"
-            android:text="@string/my_bank_list_detail" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#f1f1f1" />
+            android:text="@string/my_details" />
 
         <View
             android:layout_width="match_parent"
@@ -60,6 +56,7 @@
             android:background="#f1f1f1" />
 
         <Button
+            android:id="@+id/my_payment_address"
             style="@style/BottomSheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,6 +70,7 @@
             android:background="#f1f1f1" />
 
         <Button
+            android:id="@+id/manage_beneficiary"
             style="@style/BottomSheetButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

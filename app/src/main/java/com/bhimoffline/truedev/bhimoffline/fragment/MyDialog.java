@@ -1,4 +1,4 @@
-package com.bhimoffline.truedev.bhimoffline.activity;
+package com.bhimoffline.truedev.bhimoffline.fragment;
 
 import android.Manifest;
 import android.app.AlertDialog;

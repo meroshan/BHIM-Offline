@@ -95,6 +95,13 @@
         </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="Enter your UPI PIN in the next screen to complete the transaction" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

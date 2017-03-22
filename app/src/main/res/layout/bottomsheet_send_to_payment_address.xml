@@ -11,7 +11,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:paddingStart="8dp"
-        android:text="Send to Mobile Number"
+        android:text="Send to Payment Address"
         android:textColor="@android:color/white"
         android:textSize="24sp" />
 
@@ -48,7 +48,7 @@
                 android:background="@null"
                 android:drawablePadding="8dp"
                 android:drawableStart="@drawable/ic_call"
-                android:hint="Enter receiver's mobile no"
+                android:hint="Enter receiver's payment address"
                 android:inputType="number"
                 android:maxLength="10"
                 android:maxLines="1" />

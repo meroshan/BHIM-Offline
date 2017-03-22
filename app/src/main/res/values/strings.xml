@@ -140,7 +140,7 @@
     <string name="pending_requests">Pending Requests</string>
     <string name="upi_pin">UPI PIN</string>
     <string name="change_bank_account">Change Bank Account</string>
-    <string name="my_bank_list_detail">My Bank List Detail</string>
+    <string name="my_details">My Details</string>
     <string name="my_payment_address">My Payment Address</string>
     <string name="manage_beneficiary">Manage Beneficiary</string>
     <string name="change_bank_account_condensed">Change Bank</string>

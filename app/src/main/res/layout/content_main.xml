@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.bhimoffline.truedev.bhimoffline.activity.BalanceCardFragment"
+        android:name="com.bhimoffline.truedev.bhimoffline.fragment.BalanceCardFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_default_margin" />

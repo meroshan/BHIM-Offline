@@ -9,8 +9,8 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
-import com.bhimoffline.truedev.bhimoffline.activity.BalanceCardFragment;
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
+import com.bhimoffline.truedev.bhimoffline.fragment.BalanceCardFragment;
 import com.bhimoffline.truedev.bhimoffline.utils.CheckBackgroundService;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.bhimoffline.truedev.bhimoffline.activity;
+package com.bhimoffline.truedev.bhimoffline.fragment;
 
 import android.Manifest;
 import android.app.DialogFragment;
@@ -16,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bhimoffline.truedev.bhimoffline.R;
 import com.github.javiersantos.bottomdialogs.BottomDialog;
@@ -38,7 +40,9 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
     TextView balance_card_last_updated;
     Button update_balance, other_services;
     SharedPreferences sharedPreferences;
-    BottomDialog services, send_money, send_to_mobile, my_account, upi_pin, request_money, send_to_aadhar;
+    BottomDialog services, send_money, send_to_mobile, my_account, upi_pin, request_money, send_to_aadhar,
+            send_to_payment_address, send_to_ifsc, send_to_mmid;
+    EditText bottomsheet_mobile_no, bottomsheet_amount;
     private BottomSheetListener mbottomSheetListener;
 
     @Override
@@ -65,7 +69,9 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
         sharedPreferences.edit().putString("balance", balance).apply();
         sharedPreferences.edit().putString("last_updated", date).apply();
 
-        balance_card_balance.setText("Rs " + balance);
+        if (!balance.equals("Balance"))
+            balance = "Rs" + " " + balance;
+        balance_card_balance.setText(balance);
         balance_card_last_updated.setText(date);
         mbottomSheetListener.updateBalance("Rs " + balance);
         //Toast.makeText(getActivity(), "fragment " + message.message, Toast.LENGTH_SHORT).show();
@@ -90,9 +96,17 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
         balance_card_balance = (TextView) view.findViewById(R.id.balance_card_balance);
         balance_card_last_updated = (TextView) view.findViewById(R.id.balance_card_last_updated);
 
+        //this.getActivity().getSharedPreferences(myPref, 0).edit().clear().apply();
         String balance = sharedPreferences.getString(BALANCE, "Balance");
-        balance_card_balance.setText(getString(R.string.balance_prefix) + " " + balance);
-        balance_card_last_updated.setText(sharedPreferences.getString("last_updated", " " + "never"));
+        Toast.makeText(getActivity(), balance, Toast.LENGTH_SHORT).show();
+
+        if (!balance.equals("Balance") && !balance.equals("Unable to fetch balance")) {
+            balance = "Rs" + " " + balance;
+        }
+
+        Toast.makeText(getActivity(), balance, Toast.LENGTH_SHORT).show();
+        balance_card_balance.setText(balance);
+        balance_card_last_updated.setText(sharedPreferences.getString("last_updated", "never"));
 
         balance_card_balance.setOnClickListener(this);
         update_balance = (Button) view.findViewById(R.id.update_balance);
@@ -100,6 +114,42 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
         other_services = (Button) view.findViewById(R.id.other_services);
         other_services.setOnClickListener(this);
         return view;
+    }
+
+    public void bottomSheetSendToMmidCustomView() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View customView = inflater.inflate(R.layout.bottomsheet_send_to_mmid, null);
+
+        if (send_to_mmid != null)
+            send_to_mmid.dismiss();
+
+        send_to_mmid = new BottomDialog.Builder(getActivity())
+                .setCustomView(customView)
+                .show();
+    }
+
+    public void bottomSheetSendToIfscCustomView() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View customView = inflater.inflate(R.layout.bottomsheet_send_to_ifsc, null);
+
+        if (send_to_ifsc != null)
+            send_to_ifsc.dismiss();
+
+        send_to_ifsc = new BottomDialog.Builder(getActivity())
+                .setCustomView(customView)
+                .show();
+    }
+
+    public void bottomSheetSendToPaymentAddressCustomView() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View customView = inflater.inflate(R.layout.bottomsheet_send_to_payment_address, null);
+
+        if (send_to_payment_address != null)
+            send_to_payment_address.dismiss();
+
+        send_to_payment_address = new BottomDialog.Builder(getActivity())
+                .setCustomView(customView)
+                .show();
     }
 
     public void bottomSheetSendToAadharCustomView() {
@@ -124,6 +174,9 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
         request_money = new BottomDialog.Builder(getActivity())
                 .setCustomView(customView)
                 .show();
+
+        bottomsheet_mobile_no = (EditText) customView.findViewById(R.id.bottomsheet_mobile_no);
+        bottomsheet_amount = (EditText) customView.findViewById(R.id.bottomsheet_amount);
     }
 
     public void bottomSheetUpiPinCustomView() {
@@ -147,6 +200,7 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
                 if (upi_pin != null) {
                     upi_pin.dismiss();
                 }
+                //makeCall("*99*7*1");
             }
         });
 
@@ -156,6 +210,7 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
                 if (upi_pin != null) {
                     upi_pin.dismiss();
                 }
+                //makeCall("*99*7*2");
             }
         });
     }
@@ -170,6 +225,50 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
         my_account = new BottomDialog.Builder(getActivity())
                 .setCustomView(customView)
                 .show();
+
+        Button change_bank, my_details, my_payment_address, manage_beneficiary;
+
+        change_bank = (Button) customView.findViewById(R.id.change_bank);
+        my_details = (Button) customView.findViewById(R.id.my_details);
+        my_payment_address = (Button) customView.findViewById(R.id.my_payment_address);
+        manage_beneficiary = (Button) customView.findViewById(R.id.manage_beneficiary);
+
+        change_bank.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (my_account != null) {
+                    my_account.dismiss();
+                }
+                //makeCall("*99*4*1");
+            }
+        });
+        my_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (my_account != null) {
+                    my_account.dismiss();
+                }
+                //makeCall("*99*4*3");
+            }
+        });
+        my_payment_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (my_account != null) {
+                    my_account.dismiss();
+                }
+                //makeCall("*99*4*4");
+            }
+        });
+        manage_beneficiary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (my_account != null) {
+                    my_account.dismiss();
+                }
+                //makeCall("*99*4*5");
+            }
+        });
     }
 
     public void bottomSheetSendToMobileCustomView() {
@@ -203,7 +302,6 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
         send_to_ifsc = (Button) customView.findViewById(R.id.send_to_ifsc);
         send_to_mmid = (Button) customView.findViewById(R.id.send_to_mmid);
 
-
         send_to_mobile_no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,24 +325,39 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
         send_to_payment_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (send_money != null) {
+                    send_money.dismiss();
+                }
+                bottomSheetSendToPaymentAddressCustomView();
             }
         });
 
         send_to_saved_beneficiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (send_money != null) {
+                    send_money.dismiss();
+                }
             }
         });
 
         send_to_ifsc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (send_money != null) {
+                    send_money.dismiss();
+                }
+                bottomSheetSendToIfscCustomView();
             }
         });
 
         send_to_mmid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (send_money != null) {
+                    send_money.dismiss();
+                }
+                bottomSheetSendToMmidCustomView();
             }
         });
     }
@@ -303,6 +416,7 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
                 if (services != null) {
                     services.dismiss();
                 }
+                //makeCall("*99*5");
             }
         });
         transactions.setOnClickListener(new View.OnClickListener() {
@@ -311,6 +425,7 @@ public class BalanceCardFragment extends Fragment implements View.OnClickListene
                 if (services != null) {
                     services.dismiss();
                 }
+                //makeCall("*99*6");
             }
         });
         upi_pin.setOnClickListener(new View.OnClickListener() {

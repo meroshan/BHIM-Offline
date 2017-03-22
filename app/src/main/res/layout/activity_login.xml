@@ -130,6 +130,7 @@
                     android:paddingEnd="48dp"
                     android:paddingStart="48dp"
                     android:paddingTop="18dp"
+                    android:stateListAnimator="@null"
                     android:text="@string/button_continue"
                     android:textSize="@dimen/medium_text_size"
                     android:theme="@style/FlatButtonColored" />

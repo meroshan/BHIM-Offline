@@ -52,11 +52,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#f1f1f1" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
             android:layout_marginStart="12dp"
             android:background="#f1f1f1" />
 
@@ -73,7 +68,6 @@
             android:layout_height="1dp"
             android:layout_marginStart="12dp"
             android:background="#f1f1f1" />
-
 
         <Button
             android:id="@+id/pending_requests"

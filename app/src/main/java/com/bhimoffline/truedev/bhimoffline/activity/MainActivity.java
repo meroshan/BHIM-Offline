@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +22,7 @@ import android.widget.Toast;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bhimoffline.truedev.bhimoffline.R;
+import com.bhimoffline.truedev.bhimoffline.fragment.BalanceCardFragment;
 import com.bhimoffline.truedev.bhimoffline.service.BackgroundService;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
 import com.crashlytics.android.Crashlytics;
@@ -50,8 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView bank_logo;
     ImageView share_whatsApp;
     ImageView rate_play_store;
-    EditText editText;
-    String TAG = "tag";
+    String TAG = "MainActivity";
     int flag = 0;
     private FirebaseAnalytics mFirebaseAnalytics;
     private BottomSheetLayout bottomSheet;
@@ -70,14 +69,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void updateBalance(String balance) {
         if (user_detail_card_balance != null) {
+            if (!balance.equals("Balance") && !balance.equals("Unable to fetch balance")) {
+                balance = "Rs" + " " + balance;
+            }
             user_detail_card_balance.setText("Rs " + balance);
         }
     }
 
     public void showMenuSheet(final int id, String title) {
         flag = 0;
-        new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
-
         MenuSheetView menuSheetView =
                 new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, title, new MenuSheetView.OnMenuItemClickListener() {
                     @Override
@@ -104,11 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             menuSheetView.inflateMenu(id);
             bottomSheet.showWithSheetView(menuSheetView);
         }
-        // new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
-    }
-
-    public void sendtomobile() {
-        //new SendToBottomSheetFragment().show(getSupportFragmentManager(), R.id.bottomsheet);
     }
 
     @Override
@@ -185,7 +180,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         TextDrawable textDrawable = TextDrawable.builder().buildRound(String.valueOf(bankInitial), color);
         bank_logo.setImageDrawable(textDrawable);
-        user_detail_card_balance.setText("Rs " + balance);
+        if (!balance.equals("Balance") && !balance.equals("Unable to fetch balance")) {
+            balance = "Rs" + " " + balance;
+        }
+        user_detail_card_balance.setText(balance);
     }
 
     @Override

@@ -6,7 +6,7 @@
         android:titleCondensed="@string/change_bank_account_condensed" />
     <item
         android:icon="@drawable/ic_list"
-        android:title="@string/my_bank_list_detail" />
+        android:title="@string/my_details" />
     <item
         android:icon="@drawable/ic_home"
         android:title="@string/my_payment_address" />
