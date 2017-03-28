@@ -3,7 +3,6 @@ package com.bhimoffline.truedev.bhimoffline.fragment;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +12,7 @@ import android.support.v4.app.ActivityCompat;
  * Created by rahul on 17-Mar-17.
  */
 
-public class MyDialog extends DialogFragment {
+public class MyDialog extends android.support.v4.app.DialogFragment {
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {Manifest.permission.CALL_PHONE};
 
@@ -42,3 +41,5 @@ public class MyDialog extends DialogFragment {
         return a;
     }
 }
+
+//we are try

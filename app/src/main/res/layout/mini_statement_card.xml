@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
-    app:cardBackgroundColor="#673AB7"
-    app:cardElevation="@dimen/cardview_default_elevation">
+    app:cardBackgroundColor="#F44336"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,21 +27,21 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:maxLines="1"
-                android:text="Bank balance"
+                android:text="Transactions"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/balance_card_last_updated"
+                android:layout_toStartOf="@+id/mini_card_last_updated"
                 android:maxLines="1"
                 android:text="@string/last_updated"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/balance_card_last_updated"
+                android:id="@+id/mini_card_last_updated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -60,25 +60,24 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/balance_card_balance"
+            android:id="@+id/mini_card_balance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal|center_vertical"
-            android:maxLines="2"
             android:paddingBottom="40dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="48dp"
-            android:text="Balance"
+            android:text="Transactions"
             android:textColor="@android:color/white"
             android:textSize="48sp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.1dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginStart="2dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:background="@android:color/white"
             android:visibility="visible" />
 
@@ -88,7 +87,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/update_balance"
+                android:id="@+id/update_mini"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,20 +97,6 @@
                 android:text="@string/button_update_balance"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
-
-            <!--<Button-->
-            <!--android:id="@+id/other_services"-->
-            <!--style="@style/Widget.AppCompat.Button"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginEnd="8dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:maxLines="1"-->
-            <!--android:padding="16dp"-->
-            <!--android:stateListAnimator="@null"-->
-            <!--android:text="@string/other_services"-->
-            <!--android:textSize="18sp"-->
-            <!--android:theme="@style/FlatButton" />-->
         </LinearLayout>
 
         <Space

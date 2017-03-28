@@ -15,4 +15,5 @@
     <color name="buttonSlideUp">#ffffff</color>
     <color name="light_text">#aaaaaa</color>
     <color name="light_blue">#2196f3</color>
+    <color name="nav_item_state_list">#ffffff</color>
 </resources>

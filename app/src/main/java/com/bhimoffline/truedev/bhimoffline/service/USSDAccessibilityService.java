@@ -10,17 +10,15 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.bhimoffline.truedev.bhimoffline.activity.MainActivity;
-import com.bhimoffline.truedev.bhimoffline.fragment.BalanceCardFragment;
+import com.bhimoffline.truedev.bhimoffline.fragment.Fragment1;
 import com.bhimoffline.truedev.bhimoffline.utils.CheckBackgroundService;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
-
-import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.isActivityVisible;
 
 /**
  * Created by rahul on 1/2/2017.
@@ -59,18 +57,40 @@ public class USSDAccessibilityService extends AccessibilityService {
 
         if (TextUtils.isEmpty(text)) return;
 
-        if (isActivityVisible()) {
-            Log.d(Tag, "activity is visible");
-            performGlobalAction(GLOBAL_ACTION_BACK); // This works on 4.1+ only
-        }
+        // if (isActivityVisible()) {
+        Log.d(Tag, "activity is visible");
+        performGlobalAction(GLOBAL_ACTION_BACK); // This works on 4.1+ only
+        //}
 
-        parseMobileBalance(eventText.toString());
+        EventBus.getDefault().post(new Fragment1.MessageEvent(eventText.toString()));
+        //parsebankBalance(eventText.toString());
     }
 
-    private void parsebankBalance(String message) {
-        String tokens[] = message.split("\\s");
-
-    }
+//    private void parsebankBalance(String message) {
+//        String tokens[] = message.toLowerCase().split("\\s");
+//        ArrayList<String> keywords = new ArrayList<>(Arrays.asList(tokens));
+//
+//
+//        Log.d("zxcvb", message);
+//        int pos;
+//        String balance = "null";
+//        if (keywords.contains("rs.") || keywords.contains("rs")) {
+//            if (keywords.contains("rs.")) {
+//                pos = keywords.indexOf("rs.");
+//                if (pos + 1 < keywords.size()) {
+//                    balance = keywords.get(pos + 1);
+//                    balance = balance.substring(0, balance.length() - 1);
+//                }
+//            } else if (keywords.contains("rs")) {
+//                pos = keywords.indexOf("rs");
+//                if (pos + 1 < keywords.size()) {
+//                    balance = keywords.get(pos + 1);
+//                    balance = balance.substring(0, balance.length() - 1);
+//                }
+//            }
+//        }
+//
+//    }
 
     private void parseMobileBalance(String message) {
         String words[] = message.toLowerCase().split("\\s*[:,.\\s*]\\s*");
@@ -86,7 +106,7 @@ public class USSDAccessibilityService extends AccessibilityService {
                 balance = keywords.get(pos - 1);
             }
         }
-        EventBus.getDefault().post(new BalanceCardFragment.MessageEvent(balance));
+        EventBus.getDefault().post(new Fragment1.MessageEvent(balance));
         //Toast.makeText(this, "balance is + " + balance, Toast.LENGTH_SHORT).show();
     }
 

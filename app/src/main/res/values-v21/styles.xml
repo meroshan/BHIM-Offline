@@ -12,6 +12,11 @@
         <item name="android:colorButtonNormal">@color/light_blue</item>
     </style>
 
+    <style name="FlatButtonGreen" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:colorButtonNormal">@color/colorPrimary</item>
+    </style>
+
     <style name="ServiceButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:colorButtonNormal">@color/light_blue</item>

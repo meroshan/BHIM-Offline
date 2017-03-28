@@ -16,9 +16,9 @@ import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
 
-import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.BANK_NAME;
-import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.LOGGED;
-import static com.bhimoffline.truedev.bhimoffline.activity.MainActivity.PHONE_NO;
+import static com.bhimoffline.truedev.bhimoffline.fragment.Fragment1.BANK_NAME;
+import static com.bhimoffline.truedev.bhimoffline.fragment.Fragment1.LOGGED;
+import static com.bhimoffline.truedev.bhimoffline.fragment.Fragment1.PHONE_NO;
 
 
 /**

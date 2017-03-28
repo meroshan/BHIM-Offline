@@ -143,6 +143,7 @@
         android:text="Enter your UPI PIN in the next screen to complete the transaction" />
 
     <Button
+        android:id="@+id/send_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -5,152 +5,57 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PersistableBundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bhimoffline.truedev.bhimoffline.R;
-import com.bhimoffline.truedev.bhimoffline.fragment.BalanceCardFragment;
+import com.bhimoffline.truedev.bhimoffline.fragment.Fragment1;
+import com.bhimoffline.truedev.bhimoffline.fragment.Fragment2;
 import com.bhimoffline.truedev.bhimoffline.service.BackgroundService;
 import com.bhimoffline.truedev.bhimoffline.service.USSDAccessibilityService;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
-import com.flipboard.bottomsheet.BottomSheetLayout;
-import com.flipboard.bottomsheet.commons.MenuSheetView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import io.fabric.sdk.android.Fabric;
 
+import static com.bhimoffline.truedev.bhimoffline.fragment.Fragment1.BALANCE;
+import static com.bhimoffline.truedev.bhimoffline.fragment.Fragment1.PHONE_NO;
 import static com.bhimoffline.truedev.bhimoffline.login.LoginActivity.myPref;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, BalanceCardFragment.BottomSheetListener {
-    public final static String LOGGED = "isLoggedIn";
-    public final static String PHONE_NO = "phone_no";
-    public final static String BANK_NAME = "bank_name";
-    public final static String BALANCE = "balance";
-    public static Handler handler;
-    private static boolean activityVisible;
+public class MainActivity extends AppCompatActivity {
+
+    private static final String SELECTED_ITEM = "arg_selected_item";
+    public static String PACKAGE_NAME;
+    public static String UNABLE_TO_FETCH = "Unable to fetch balance";
+    public static TextView user_detail_card_balance;
     SharedPreferences sharedPreferences;
     TextView user_detail_card_bank_name;
     TextView user_detail_card_upi_address;
-    TextView user_detail_card_balance;
     ImageView bank_logo;
-    ImageView share_whatsApp;
-    ImageView rate_play_store;
-    String TAG = "MainActivity";
-    int flag = 0;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private BottomSheetLayout bottomSheet;
+    String TAG = "mainactivity";
+    private int mSelectedItem;
 
-    public static boolean isActivityVisible() {
-        return activityVisible;
-    }
-
-    public static void activityResumed() {
-        activityVisible = true;
-    }
-
-    public static void activityStopped() {
-        activityVisible = false;
-    }
-
-    public void updateBalance(String balance) {
+    public static void updateBalance(String balance) {
         if (user_detail_card_balance != null) {
-            if (!balance.equals("Balance") && !balance.equals("Unable to fetch balance")) {
-                balance = "Rs" + " " + balance;
+            if (balance.toLowerCase().equals("balance")) {
+            } else {
+                balance = "₹" + " " + balance;
             }
-            user_detail_card_balance.setText("Rs " + balance);
+            user_detail_card_balance.setText(balance);
         }
-    }
-
-    public void showMenuSheet(final int id, String title) {
-        flag = 0;
-        MenuSheetView menuSheetView =
-                new MenuSheetView(MainActivity.this, MenuSheetView.MenuType.LIST, title, new MenuSheetView.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (bottomSheet.isSheetShowing()) {
-                            bottomSheet.dismissSheet();
-                        }
-                        if (item.getItemId() == R.id.send_money) {
-                            showMenuSheet(R.menu.send_money, "Send to");
-                        } else if (item.getItemId() == R.id.my_profile) {
-                            showMenuSheet(R.menu.my_profile, "My account");
-                        } else if (item.getItemId() == R.id.upi_pin) {
-                            showMenuSheet(R.menu.upi_pin, "UPI PIN");
-                        } else if (item.getItemId() == R.id.send_to_mobile_no) {
-                            flag = 1;
-                            Toast.makeText(MainActivity.this, "flag=1", Toast.LENGTH_SHORT).show();
-                            //sendtomobile();
-                        }
-                        return true;
-                    }
-                });
-        if (flag == 0) {
-            Toast.makeText(this, "flag=0", Toast.LENGTH_SHORT).show();
-            menuSheetView.inflateMenu(id);
-            bottomSheet.showWithSheetView(menuSheetView);
-        }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(true)
-                .build();
-        Fabric.with(fabric);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_bar_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        bottomSheet = (BottomSheetLayout) findViewById(R.id.bottomsheet);
-        bottomSheet.setPeekOnDismiss(true);
-
-        Fabric.with(this, new Answers(), new Crashlytics());
-        Answers.getInstance().logCustom(new CustomEvent("App opened"));
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
-
-        sharedPreferences = getSharedPreferences(myPref, 0);
-
-//        Bundle bundle = new Bundle();
-//        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, sharedPreferences.getString("phone_no", "Phone no not set"));
-//        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, sharedPreferences.getString("bank_name", "No bank set"));
-//        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-        user_detail_card_bank_name = (TextView) findViewById(R.id.user_detail_card_bank_name);
-        user_detail_card_upi_address = (TextView) findViewById(R.id.user_detail_card_upi_address);
-        user_detail_card_balance = (TextView) findViewById(R.id.user_detail_card_balance);
-        bank_logo = (ImageView) findViewById(R.id.bank_logo);
-        share_whatsApp = (ImageView) findViewById(R.id.share_whatsApp);
-        rate_play_store = (ImageView) findViewById(R.id.rate_play_store);
-        //get_started_install = (Button) findViewById(R.id.get_started_install);
-
-        share_whatsApp.setOnClickListener(this);
-        rate_play_store.setOnClickListener(this);
-        //get_started_install.setOnClickListener(this);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override
@@ -162,11 +67,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String bank_name = sharedPreferences.getString("bank_name", "Bank Name");
         String mobile_no = sharedPreferences.getString("phone_no", "Mobile no");
-
         String balance = sharedPreferences.getString(BALANCE, "Balance");
 
         user_detail_card_bank_name.setText(bank_name);
         user_detail_card_upi_address.setText(mobile_no + getString(R.string.upi_address_postfix));
+
+        //updating main balance
+        updateBalance(balance);
 
         ColorGenerator colorGenerator = ColorGenerator.MATERIAL;
         int color = colorGenerator.getRandomColor();
@@ -180,88 +87,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         TextDrawable textDrawable = TextDrawable.builder().buildRound(String.valueOf(bankInitial), color);
         bank_logo.setImageDrawable(textDrawable);
-        if (!balance.equals("Balance") && !balance.equals("Unable to fetch balance")) {
-            balance = "Rs" + " " + balance;
-        }
-        user_detail_card_balance.setText(balance);
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.share_whatsApp:
-                shareOnWhatsApp();
-                break;
-            case R.id.rate_play_store:
-                Intent bhimOffline = new Intent(Intent.ACTION_VIEW);
-                bhimOffline.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.sohaari.bhimoffline"));
-                startActivity(bhimOffline);
-                break;
-//            case R.id.editText:
-//                Toast.makeText(this, "edittext", Toast.LENGTH_SHORT).show();
-//                editText.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        InputMethodManager imm =
-//                                (InputMethodManager) getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        imm.showSoftInput(editText, 0);
-//                    }
-//                });
-//                break;
-//            case R.id.get_started_install:
-//                Toast.makeText(instance, "Opening Play Store", Toast.LENGTH_SHORT).show();
-//                Intent phonePe = new Intent(Intent.ACTION_VIEW);
-//                phonePe.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.phonepe.app"));
-//                startActivity(phonePe);
-//                break;
-        }
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(true)
+                .build();
+        Fabric.with(fabric);
 
-    private void shareOnWhatsApp() {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        String message = "Don't have Internet connection and still want to check your bank balance and send money? Download BHIM Offline" +
-                " app and experience offline banking on a click.\n https://play.google.com/store/apps/details?id=com.sohaari.bhimoffline";
-        shareIntent.putExtra(Intent.EXTRA_TEXT, message);
-        startActivity(shareIntent);
-    }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.app_bar_main);
 
-    private boolean isAccessibilitySettingsOn(Context mContext) {
-        int accessibilityEnabled = 0;
-        final String service = getPackageName() + "/" + USSDAccessibilityService.class.getCanonicalName();
-        try {
-            accessibilityEnabled = Settings.Secure.getInt(
-                    mContext.getApplicationContext().getContentResolver(),
-                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
-            Log.v(TAG, "accessibilityEnabled = " + accessibilityEnabled);
-        } catch (Settings.SettingNotFoundException e) {
-            Log.e(TAG, "Error finding setting, default accessibility to not found: "
-                    + e.getMessage());
-        }
-        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+        PACKAGE_NAME = getApplicationContext().getPackageName();
 
-        if (accessibilityEnabled == 1) {
-            Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
-            String settingValue = Settings.Secure.getString(
-                    mContext.getApplicationContext().getContentResolver(),
-                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-            if (settingValue != null) {
-                mStringColonSplitter.setString(settingValue);
-                while (mStringColonSplitter.hasNext()) {
-                    String accessibilityService = mStringColonSplitter.next();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-                    Log.v(TAG, "-------------- > accessibilityService :: " + accessibilityService + " " + service);
-                    if (accessibilityService.equalsIgnoreCase(service)) {
-                        Log.v(TAG, "We've found the correct setting - accessibility is switched on!");
+        sharedPreferences = getSharedPreferences(myPref, 0);
+        //sharedPreferences.edit().clear().apply();
+
+        user_detail_card_bank_name = (TextView) findViewById(R.id.user_detail_card_bank_name);
+        user_detail_card_upi_address = (TextView) findViewById(R.id.user_detail_card_upi_address);
+        user_detail_card_balance = (TextView) findViewById(R.id.user_detail_card_balance);
+        bank_logo = (ImageView) findViewById(R.id.bank_logo);
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener
+                (new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        selectFragment(item);
                         return true;
                     }
-                }
-            }
+                });
+
+        MenuItem selectedItem;
+        if (savedInstanceState != null) {
+            mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
+            selectedItem = bottomNavigationView.getMenu().findItem(mSelectedItem);
         } else {
-            Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
+            selectedItem = bottomNavigationView.getMenu().getItem(0);
         }
-        return false;
+        selectFragment(selectedItem);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_ITEM, mSelectedItem);
+        super.onSaveInstanceState(outState);
+    }
+
+    private void selectFragment(MenuItem item) {
+        Fragment selectedFragment = null;
+        switch (item.getItemId()) {
+            case R.id.menu_one:
+                selectedFragment = new Fragment1();
+                break;
+            case R.id.menu_two:
+                selectedFragment = new Fragment2();
+                break;
+        }
+        mSelectedItem = item.getItemId();
+        if (selectedFragment != null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, selectedFragment);
+            transaction.commit();
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
 
 //    public void makeCall(final String ussdCode) {
 //        new Thread(new Runnable() {
@@ -325,14 +228,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        MainActivity.activityStopped();
-        stopService(new Intent(this, BackgroundService.class));
+//        MainActivity.activityStopped();
+//        stopService(new Intent(this, BackgroundService.class));
         super.onDestroy();
+    }
+
+    private boolean isAccessibilitySettingsOn(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = PACKAGE_NAME + "/" + USSDAccessibilityService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+            Log.v(TAG, "accessibilityEnabled = " + accessibilityEnabled);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e(TAG, "Error finding setting, default accessibility to not found: "
+                    + e.getMessage());
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
+            String settingValue = Settings.Secure.getString(
+                    mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+
+                    Log.v(TAG, "-------------- > accessibilityService :: " + accessibilityService + " " + service);
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        Log.v(TAG, "We've found the correct setting - accessibility is switched on!");
+                        return true;
+                    }
+                }
+            }
+        } else {
+            Log.v(TAG, "***ACCESSIBILITY IS DISABLED***");
+        }
+        return false;
     }
 
     protected void onResume() {
         super.onResume();
-        MainActivity.activityResumed();
+        //MainActivity.activityResumed();
         startService(new Intent(this, BackgroundService.class));
 
         sharedPreferences = getSharedPreferences(myPref, 0);

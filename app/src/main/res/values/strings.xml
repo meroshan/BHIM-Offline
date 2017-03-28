@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BHiM Offline</string>
+    <string name="app_name">Offline Banking</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,7 +10,7 @@
     <string name="action_settings">Report a bug</string>
     <string name="latest_transactions">Latest transactions</string>
     <string name="accessibility_service_not_enabled_message">"If accessibility service is turned off for this app, we can't fetch your bank balance. We read USSD message only to fetch your bank balance, that's it. So it is absolutely safe to use."</string>
-    <string name="accessibility_label"><b>●● BHiM Offline ●●</b></string>
+    <string name="accessibility_label"><b>●● Offline Banking ●●</b></string>
     <string name="large_text">
         "██Material is the metaphor.\n\n"
 
@@ -132,7 +132,7 @@
     <string name="go_to_setting">Go to Setting</string>
     <string name="please_turn_on">Turn on</string>
     <string name="from_accessibility_settings">from accessibility settings</string>
-    <string name="button_update_balance">Refresh</string>
+    <string name="button_update_balance">Update</string>
     <string name="other_services">Services</string>
     <string name="send_money">Send Money</string>
     <string name="request_money">Request Money</string>

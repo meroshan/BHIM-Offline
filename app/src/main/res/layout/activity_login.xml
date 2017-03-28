@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:layout_weight="1"
     android:background="@drawable/login_back"
     android:gravity="center"
     android:orientation="vertical"
@@ -20,7 +21,7 @@
         android:text="@string/app_name"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:textSize="32sp" />
+        android:textSize="32dp" />
 
     <!--<ScrollView-->
     <!--android:layout_width="match_parent"-->
@@ -60,64 +61,46 @@
                 android:layout_gravity="center"
                 android:layout_margin="0dp"
                 android:maxLines="1"
-                android:padding="24dp"
+                android:padding="12dp"
                 android:text="@string/enter_details_to_continue"
                 android:textAlignment="center"
-                android:textSize="20sp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp">
+                android:paddingBottom="4dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/login_mobile_no"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="16dp"
+                    android:drawablePadding="12dp"
                     android:drawableStart="@drawable/ic_call_colored"
                     android:hint="@string/registered_mobile_no"
                     android:inputType="number"
                     android:maxLength="10"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textSize="16dp" />
             </android.support.design.widget.TextInputLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="00dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="0dp"
-                android:background="@color/colorPrimary"
-                android:visibility="gone" />
 
             <AutoCompleteTextView
                 android:id="@+id/login_bank_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:completionThreshold="1"
-                android:drawablePadding="16dp"
+                android:drawablePadding="12dp"
                 android:drawableStart="@drawable/ic_bank_colored"
                 android:hint="@string/select_bank"
                 android:inputType="text"
-                android:maxLines="1" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/colorPrimary"
-                android:visibility="gone" />
+                android:maxLines="1"
+                android:textSize="16dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="24dp"
+                android:layout_margin="16dp"
                 android:gravity="center">
 
                 <Button
@@ -132,15 +115,15 @@
                     android:paddingTop="18dp"
                     android:stateListAnimator="@null"
                     android:text="@string/button_continue"
-                    android:textSize="@dimen/medium_text_size"
+                    android:textSize="18dp"
                     android:theme="@style/FlatButtonColored" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="0dp"
                 android:background="#22000000" />
 
             <LinearLayout
@@ -154,14 +137,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/don_t_have_upi_address"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/download_guide"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <!--<LinearLayout-->
                 <!--android:layout_width="match_parent"-->
@@ -201,6 +184,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="000dp" />
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
     <!--</ScrollView>-->
 </LinearLayout>

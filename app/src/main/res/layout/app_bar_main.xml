@@ -34,37 +34,24 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <include layout="@layout/content_main" />
-        </android.support.v4.widget.NestedScrollView>
+            <!--<include layout="@layout/content_main" />-->
 
+            <FrameLayout
+                android:id="@+id/frame_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.NestedScrollView>
     </android.support.design.widget.CoordinatorLayout>
 
-    <!--<FrameLayout-->
-    <!--android:id="@+id/dim"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:alpha="0"-->
-    <!--android:background="#bf000000"-->
-    <!--android:clickable="false" />-->
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_blue"
+        app:itemIconTint="@color/nav_item_state_list"
+        app:itemTextColor="@color/nav_item_state_list"
+        app:menu="@menu/bottom_nav_items" />
 
-    <!--<RelativeLayout-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:gravity="end">-->
-
-    <!--<include layout="@layout/content_services" />-->
-    <!--</RelativeLayout>-->
-
-    <!--<com.flipboard.bottomsheet.BottomSheetLayout-->
-    <!--android:id="@+id/bottomsheet"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-    <!--</com.flipboard.bottomsheet.BottomSheetLayout>-->
-    <include layout="@layout/menu_other_services" />
+    <!--<include layout="@layout/menu_other_services" />-->
 </RelativeLayout>
